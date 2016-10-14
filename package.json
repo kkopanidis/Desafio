@@ -12,6 +12,12 @@
     "express": "~4.13.4",
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.8.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "oauth2orize": "^1.2.2",
+    "passport": "~0.3.2",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-oauth2": "~1.2.0",
+    "passport-oauth2-client-password": "^0.1.2"
   }
 }
