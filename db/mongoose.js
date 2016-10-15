@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://root:admin@storydb.westeurope.cloudapp.azure.com/studeat');
+//todo add database url here
+mongoose.connect('mongodb://');
 
 var db = mongoose.connection;
 

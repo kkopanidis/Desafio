@@ -9,6 +9,9 @@ main_app.config(['$routeProvider', '$locationProvider', function ($routeProvider
     $routeProvider.when('/', {
         templateUrl: '/partial/index.html',
         controller: 'IndexCtrl'
+    }).when('/register', {
+        templateUrl: '/partial/register.html',
+        controller: 'IndexCtrl'
     }).otherwise({
         redirectTo: '/'
     });
