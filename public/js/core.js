@@ -7,10 +7,10 @@ var main_app = angular.module('desafio', ['ngRoute', 'ngAnimate',
 main_app.config(['$routeProvider', '$locationProvider', function ($routeProvider,
                                                                   $locationProvider) {
     $routeProvider.when('/', {
-        templateUrl: '/partial/index.html',
+        templateUrl: '/partials/index.html',
         controller: 'IndexCtrl'
     }).when('/register', {
-        templateUrl: '/partial/register.html',
+        templateUrl: '/partials/register.html',
         controller: 'IndexCtrl'
     }).otherwise({
         redirectTo: '/'
