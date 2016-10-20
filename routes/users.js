@@ -5,14 +5,24 @@ var User = require('../models/user');
 var Token = require('../models/accessToken');
 var TokenRef = require('../models/refreshToken');
 var passport = require('passport');
+var client = require('../models/client');
 
 //Register new user
 router.post('/register', function (req, res, next) {
+
+new client({
+    name:"basic",
+    clientId:"Axxh45u4bdajGDshjk21n",
+    clientSecret:"d13e~223~!!@$5dasd"
+}).save(function (err, result) {
+
+});
+
     new User({
-        email: req.body[0],
-        username: req.body[1],
-        password: req.body[2],
-        dob: req.body[3]
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        dob: req.body.dob
     }).save(function (err, result) {
         if (err || !result) {
             res.status(500).send(err);

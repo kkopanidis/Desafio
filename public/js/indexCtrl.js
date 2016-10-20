@@ -18,15 +18,16 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
             grant_type: "password",
             client_id: "Axxh45u4bdajGDshjk21n",
             client_secret: "d13e~223~!!@$5dasd",
-            username: $scope.email,
-            password: $scope.password
+            username: $scope.user.email,
+            password: $scope.user.password
         }).then(function success(response) {
 
-
+            window.alert("Success!");
+            $location.url("/");
         }, function error(status) {
-
+            window.alert("Failed :(");
         });
-        
+
     }
 
     //Same as the login
@@ -34,9 +35,21 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
         $location.url('/register');
     }
 
+    function register() {
+        $http.post("/api/users/register", $scope.user)
+            .then(function success(response) {
+                window.alert("Success!");
+                $location.url('/');
+            }, function error(status) {
+                window.alert("Failed :(");
+
+            });
+    }
+
+
     $scope.login = login;
     $scope.register_button = register_button;
-
+    $scope.register = register;
 }]);
 
 
