@@ -1,17 +1,33 @@
 <div class="wrapper">
 <div class="container">
+    <md-content class="md-padding" layout-xs="column" layout="row">
+        <div flex-xs flex-gt-xs="50" layout="column">
+            <md-card>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Login</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <md-input-container>
+                        <label>Email</label>
+                        <input ng-model="user.email" type="email">
+                    </md-input-container>
 
+                    <md-input-container>
+                        <label>Password</label>
+                        <input ng-model="user.password" type="password">
+                    </md-input-container>
 
-    <form class="form" ng-submit="login()">
-        <input type="email" ng-model="email" placeholder="E-mail">
-        <input type="password" ng-model="password" placeholder="Password">
-        <button type="submit" id="login-button">Login</button>
-        <md-content>
-            <md-button class="md-raised md-warn"> {{test}}</md-button>
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="start center">
+                    <md-button  ng-click='login()'>Login</md-button>
+                    <md-button ng-click='register()' >Register</md-button>
+                </md-card-actions>
+
+            </md-card>
+            </div>
         </md-content>
-        <br>
-        <p class="reg" ng-click='register()'>Not a member yet?</p>
-    </form>
 
 </div>
 </div>

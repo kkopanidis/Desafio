@@ -33,13 +33,8 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
 
     //Same as the login
     function register() {
-        $http.post("/api/users/register", [$scope.username, $scope.email, $scope.pass, $scope.birth])
-            .then(function success(response) {
 
-            }, function error(status) {
-
-
-            });
+        $location.url('/register');
     }
 
     $scope.login = login;
