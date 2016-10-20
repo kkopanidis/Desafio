@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/users', users);
-app.use('/oauth/token', oauth2.token);
+app.use('/api/oauth/token', oauth2.token);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

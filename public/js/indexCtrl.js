@@ -1,10 +1,10 @@
 "use strict";
 
 //Define the controller module, assign its dependencies, assign the function.
-angular.module('IndexCtrl', ['$scope', '$location', '$http'], indexCtrl);
+var module = angular.module('indexCtrls', []);
 
 //The actual function that will act as the controller
-function indexCtrl($scope, $location, $http) {
+module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCtrl($scope, $location, $http) {
 
     $scope.test = "O dimitris einai papari";
     //The login function
@@ -27,6 +27,8 @@ function indexCtrl($scope, $location, $http) {
         }, function error(status) {
 
         });
+
+
     }
 
     //Same as the login
@@ -44,4 +46,7 @@ function indexCtrl($scope, $location, $http) {
     $scope.register = register;
 
 
-}
+}]);
+
+
+

@@ -1,17 +1,16 @@
 // public/core.js
-var main_app = angular.module('desafio', ['ngRoute', 'ngAnimate', 'ngMaterial',
-    'ngCookies', 'ngSanitize']);
+var desafio = angular.module('desafio', ['ngRoute', 'indexCtrls','ngMaterial','ngAnimate', 'ngCookies', 'ngSanitize']);
 
 
 //All will be changed
-main_app.config(['$routeProvider', '$locationProvider', function ($routeProvider,
+desafio.config(['$routeProvider', '$locationProvider', function ($routeProvider,
                                                                   $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: '/partials/index.html',
-        controller: 'IndexCtrl'
+        controller: 'indexCtrl'
     }).when('/register', {
         templateUrl: '/partials/register.html',
-        controller: 'IndexCtrl'
+        controller: 'indexCtrl'
     }).otherwise({
         redirectTo: '/'
     });
