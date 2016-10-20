@@ -10,24 +10,24 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
     //The login function
     function login() {
 
-        //post request, to exchange the password for a token
-        //grant_type set to password because we are sending one(duh)
-        //client_id and client_secret will be predefined
-        //get the email from the scope, assign it as username
-        // get the password from the scope assign it to the password var
-        $http.post("/api/oauth/token", {
-            grant_type: "password",
-            client_id: "Axxh45u4bdajGDshjk21n",
-            client_secret: "d13e~223~!!@$5dasd",
-            username: $scope.email,
-            password: $scope.password
-        }).then(function success(response) {
-
-
-        }, function error(status) {
-
-        });
-
+        // //post request, to exchange the password for a token
+        // //grant_type set to password because we are sending one(duh)
+        // //client_id and client_secret will be predefined
+        // //get the email from the scope, assign it as username
+        // // get the password from the scope assign it to the password var
+        // $http.post("/api/oauth/token", {
+        //     grant_type: "password",
+        //     client_id: "Axxh45u4bdajGDshjk21n",
+        //     client_secret: "d13e~223~!!@$5dasd",
+        //     username: $scope.email,
+        //     password: $scope.password
+        // }).then(function success(response) {
+        //
+        //
+        // }, function error(status) {
+        //
+        // });
+        $location.url('/main');
 
     }
 
