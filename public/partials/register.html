@@ -1,24 +1,43 @@
 <div class="wrapper">
     <div class="container">
 
-        <form class="" ng-submit="submit()">
+        <md-content class="md-padding register" layout-xs="column" layout-align="center center">
+            <div flex-xs flex-gt-xs="30" layout="column">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Register</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
 
-            <input id="f_name" ng-model="username" type="text" class="login_input name" placeholder="Username"
-                   required/>
+                        <md-input-container>
+                            <label>Username</label>
+                            <input ng-model="user.username" type="username">
+                        </md-input-container>
 
-            <input id="mail" ng-model="email" type="email" class="login_input name"
-                   placeholder="ηλεκτρονικό ταχ/μιο" required/>
+                        <md-input-container>
+                            <label>Password</label>
+                            <input ng-model="user.password" type="password">
+                        </md-input-container>
 
-            <input type="password" ng-model="pass" placeholder="Password">
-            <input type="password" ng-model="pass_conf" placeholder="Confirm Password">
+                        <md-input-container>
+                            <label>Password Again</label>
+                            <input ng-model="user.password" type="password">
+                        </md-input-container>
 
-            <input id="dob" ng-model="birth" type="date" class="login_input name"
-                   placeholder="Date Of Birth"
-                   required/>
+                        <md-input-container>
+                            <label>Email</label>
+                            <input ng-model="user.email" type="email">
+                        </md-input-container>
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="start center">
+                        <md-button ng-click='register()'> Let's go!!!</md-button>
+                    </md-card-actions>
 
-            <button class="submit_button" type="submit" value="Sign me up!">Επόμενο</button>
-
-        </form>
+                </md-card>
+            </div>
+        </md-content>
 
     </div>
 </div>

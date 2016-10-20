@@ -6,7 +6,6 @@ var module = angular.module('indexCtrls', []);
 //The actual function that will act as the controller
 module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCtrl($scope, $location, $http) {
 
-    $scope.test = "O dimitris einai papari";
     //The login function
     function login() {
 
@@ -27,19 +26,16 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
         }, function error(status) {
 
         });
-
-
+        
     }
 
     //Same as the login
-    function register() {
-
+    function register_button() {
         $location.url('/register');
     }
 
     $scope.login = login;
-    $scope.register = register;
-
+    $scope.register_button = register_button;
 
 }]);
 
