@@ -1,5 +1,5 @@
 // public/core.js
-var main_app = angular.module('desafio', ['ngRoute', 'ngAnimate',
+var main_app = angular.module('desafio', ['ngRoute', 'ngAnimate', 'ngMaterial',
     'ngCookies', 'ngSanitize']);
 
 

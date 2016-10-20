@@ -6,6 +6,9 @@
         <input type="email" ng-model="email" placeholder="E-mail">
         <input type="password" ng-model="password" placeholder="Password">
         <button type="submit" id="login-button">Login</button>
+        <md-content>
+            <md-button class="md-raised md-warn"> {{test}}</md-button>
+        </md-content>
         <br>
         <p class="reg" ng-click='register()'>Not a member yet?</p>
     </form>

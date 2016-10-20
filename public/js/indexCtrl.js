@@ -6,6 +6,7 @@ angular.module('IndexCtrl', ['$scope', '$location', '$http'], indexCtrl);
 //The actual function that will act as the controller
 function indexCtrl($scope, $location, $http) {
 
+    $scope.test = "O dimitris einai papari";
     //The login function
     function login() {
 
