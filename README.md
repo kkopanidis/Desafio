@@ -1,11 +1,10 @@
 # Desafio
 
 Steps for executing:
-
-1) $ npm install
-2) $ npm start
-3) then go to localhost:3000
-4) ~magick
+  1. $ npm install
+  2. $ npm start
+  3. then go to localhost:3000
+  4. ~magick
 
 For Docker:
 
