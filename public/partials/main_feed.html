@@ -10,17 +10,17 @@
                     <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="showNewChallenge($event)">
                         <md-icon md-svg-icon="../img/ic_add_white_36px.svg"></md-icon>
                     </md-button>
-                    <md-button class="md-fab md-mini" aria-label="Favorite">
+                    <md-input-container id="search_bar" style="display: none">
+                        <input id="search_box" ng-model="search_text" type="text">
+                    </md-input-container>
+
+                    <md-button id="search_button" class="md-fab md-mini" aria-label="Favorite" ng-click="search()">
                         <md-icon md-svg-icon="../img/ic_search_white_36px.svg"></md-icon>
                     </md-button>
                     <md-button class="md-fab md-mini" aria-label="Favorite">
 
                     </md-button>
                     <span flex></span>
-                    <p>
-                        {{name}}
-                    </p>
-
                     <p>
                         {{name}}
                     </p>

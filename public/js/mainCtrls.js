@@ -17,6 +17,24 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
         });
 
+
+        $scope.search = function () {
+            document.getElementById("search_bar").style.display = "inline";
+            var element = document.getElementById("search_box");
+            element.focus();
+
+            function focusChangeListener() {
+                document.getElementById("search_bar").style.display = "none";
+                document.getElementById("search_button").style.display = "inline";
+                element.removeEventListener('blur', focusChangeListener, false);
+            }
+
+            element.addEventListener('blur', focusChangeListener, false);
+            document.getElementById("search_button").style.display = "none";
+
+
+        };
+
         $scope.showNewChallenge = function (ev) {
             $mdDialog.show({
                 controller: DialogController,
@@ -50,15 +68,12 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                         'Authorization': 'Bearer ' + $cookies.get('auth_0')
                     }
                 }).then(function success(response) {
-                   window.alert("Success");
+                    window.alert("Success");
                 }, function error(error) {
                     window.alert("Failed");
                 });
-
-
             };
         }
-
     }]);
 
 
