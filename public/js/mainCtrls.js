@@ -12,7 +12,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies',
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
             }
         }).then(function success(response) {
-            $scope.name = response.username
+            $scope.name = response.data.username
         }, function error(error) {
 
         })
