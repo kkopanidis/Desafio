@@ -10,14 +10,6 @@ var client = require('../models/client');
 //Register new user
 router.post('/register', function (req, res, next) {
 
-new client({
-    name:"basic",
-    clientId:"Axxh45u4bdajGDshjk21n",
-    clientSecret:"d13e~223~!!@$5dasd"
-}).save(function (err, result) {
-
-});
-
     new User({
         username: req.body.username,
         email: req.body.email,
