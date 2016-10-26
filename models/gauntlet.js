@@ -11,17 +11,23 @@ var mongoose = require('mongoose'),
                 type: Schema.Types.ObjectId,
                 ref: 'User',
                 required: true
-            }, challengee: {
+            },
+            challengee: {
                 type: Schema.Types.ObjectId,
                 ref: 'User',
                 required: true
-            }, challenge: {
+            },
+            challenge: {
                 type: Schema.Types.ObjectId,
                 ref: 'Challenge',
                 required: true
-            }, status: {
-                stat: ['ACCEPTED', 'REJECTED', 'PENDING'],
-                default: 'PENDING'
+            },
+            deadline: {
+                type: Date
+            },
+            status: {
+                type: Schema.Types.ObjectId,
+                ref: 'gauntletStatus'
             }
         },
         {

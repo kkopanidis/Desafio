@@ -11,9 +11,6 @@ var mongoose = require('mongoose'),
                 type: String,
                 required: true
             },
-            deadline: {
-                type: Date
-            },
             type: {
                 type: String
             },
