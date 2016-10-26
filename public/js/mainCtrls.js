@@ -18,6 +18,17 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
         });
 
 
+        $http.get("/api/des/self", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.challenges = response.data
+        }, function error(error) {
+
+        });
+
+
         $scope.search = function () {
             document.getElementById("search_bar").style.display = "inline";
             var element = document.getElementById("search_box");
