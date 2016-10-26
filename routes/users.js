@@ -53,4 +53,5 @@ router.get('/', passport.authenticate('bearer', {session: false}), function (req
         username: req.user.username
     });
 });
+
 module.exports = router;

@@ -4,7 +4,20 @@
 var module = angular.module('indexCtrls', []);
 
 //The actual function that will act as the controller
-module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCtrl($scope, $location, $http) {
+module.controller('indexCtrl', ['$scope', '$location', '$http', '$cookies', function indexCtrl($scope, $location, $http, $cookies) {
+
+    function setCookies(expires, data) {
+        var expireDate = new Date();
+        expireDate.setSeconds(expires);
+        var expireDate_2 = new Date();
+        expireDate_2.setDate(expireDate_2.getDate() + 100);
+        $cookies.put('auth_0', data[0], {
+            'expires': expireDate
+        });
+        $cookies.put('auth_0_ref', data[1], {
+            'expires': expireDate
+        });
+    }
 
     //The login function
     function login() {
@@ -21,9 +34,8 @@ module.controller('indexCtrl', ['$scope', '$location', '$http', function indexCt
             username: $scope.user.email,
             password: $scope.user.password
         }).then(function success(response) {
-
-            window.alert("Success!");
-            $location.url("/");
+            setCookies(response.data.expires_in, [response.data.access_token, response.data.refresh_token]);
+            $location.url("/main");
         }, function error(status) {
             window.alert("Failed :(");
         });
