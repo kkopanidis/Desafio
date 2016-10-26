@@ -5,7 +5,6 @@ var User = require('../models/user');
 var Token = require('../models/accessToken');
 var TokenRef = require('../models/refreshToken');
 var passport = require('passport');
-var client = require('../models/client');
 
 //Register new user
 router.post('/register', function (req, res, next) {
@@ -26,6 +25,7 @@ router.post('/register', function (req, res, next) {
 
 });
 
+//Destroy the tokens assigned to the user
 router.post('/logout', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     Token.findOne({userId: req.user.userId}, function (err, token) {
         if (err) {
@@ -46,7 +46,7 @@ router.post('/logout', passport.authenticate('bearer', {session: false}), functi
 
 });
 
-/* GET specific user info */
+/* GET user info*/
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     res.json({
         email: req.user.email,

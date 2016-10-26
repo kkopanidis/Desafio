@@ -4,7 +4,7 @@ var passport = require('passport');
 var Challenge = require('../models/challenge');
 
 
-//Register new user
+//Create a new challenge
 router.post('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     new Challenge({
@@ -19,6 +19,22 @@ router.post('/', passport.authenticate('bearer', {session: false}), function (re
             res.status(200).send("Challenge Created");
         }
     })
+
+});
+
+
+//Get this users' challenges
+router.get('/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    Challenge.find({})
+        .where('issuer').equals(req.user._id)
+        .exec(function (err, result) {
+            if (err || !result) {
+                res.status(500).send("Something went wrong");
+            } else {
+                res.status(200).send(result);
+            }
+        })
 
 });
 
