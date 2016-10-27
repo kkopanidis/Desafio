@@ -10,6 +10,7 @@ require('./auth/auth');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var des = require('./routes/des');
+var search = require('./routes/search');
 var oauth2 = require('./auth/oauth2');
 
 var app = express();
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/users', users);
 app.use('/api/des', des);
+app.use('/api/search', search);
 app.use('/api/oauth/token', oauth2.token);
 app.use('/', routes);
 

@@ -62,6 +62,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 });
         };
 
+
         function DialogController($scope, $mdDialog) {
 
             $scope.hide = function () {
@@ -85,7 +86,49 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 });
             };
         }
+
+
     }]);
 
+module.controller('SrchCtrl', ['$http', '$cookies', '$q', SrchCtrl]);
+
+function SrchCtrl($http, $cookies, $q) {
+
+    function querySearch(query) {
+        var defered;
+        defered = $q.defer();
+
+        $http.post("/api/search/", {searchText: query}, {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0'),
+                'Content-Type': 'application/json'
+            }
+        }).then(function success(response) {
+            defered.resolve(response.data)
+        }, function error(error) {
+            //window.alert("Failed");
+            defered.resolve([]);
+        });
+
+
+        return defered.promise;
+
+    }
+
+    var self = this;
+
+    self.querySearch = querySearch;
+    self.selectedItemChange = selectedItemChange;
+    self.searchTextChange = searchTextChange;
+
+
+    function searchTextChange(text) {
+
+    }
+
+    function selectedItemChange(item) {
+
+    }
+}
 
 
