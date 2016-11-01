@@ -29,7 +29,8 @@ var mongoose = require('mongoose'),
                 type: Boolean
             },
             info: {
-                type: Schema.Types.ObjectId
+                type: Schema.Types.ObjectId,
+                ref: 'UserInfo'
             }
         },
         {
