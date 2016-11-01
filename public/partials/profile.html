@@ -1,0 +1,97 @@
+<div class="wrapper">
+    <div class="container">
+        <md-content>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>Desafio</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="showNewChallenge($event)">
+                        <md-icon md-svg-icon="../img/ic_add_white_36px.svg"></md-icon>
+                    </md-button>
+                    <form ng-controller="SrchCtrl as ctrl" id="search_bar" ng-submit="$event.preventDefault()">
+                        <md-autocomplete
+                                ng-disabled="ctrl.isDisabled"
+                                md-no-cache="ctrl.noCache"
+                                md-selected-item="ctrl.selectedItem"
+                                md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                md-search-text="ctrl.searchText"
+                                md-selected-item-change="ctrl.selectedItemChange(item)"
+                                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                md-item-text="item.username"
+                                md-min-length="0"
+                                placeholder="Search"
+                                md-menu-class="autocomplete-custom-template">
+                            <md-item-template>
+                                  <span class="item-title">
+                                    <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
+                                    <span> {{item.username}} </span>
+                                  </span>
+                                <!--<span class="item-metadata">-->
+                                <!--<span class="item-metastat">-->
+                                <!--<strong>{{item.watchers}}</strong> watchers-->
+                                <!--</span>-->
+                                <!--<span class="item-metastat">-->
+                                <!--<strong>{{item.forks}}</strong> forks-->
+                                <!--</span>-->
+                                <!--</span>-->
+                            </md-item-template>
+                        </md-autocomplete>
+                    </form>
+
+                    <md-button id="search_button" class="md-fab md-mini" aria-label="Favorite" ng-click="search()">
+                        <md-icon md-svg-icon="../img/ic_search_white_36px.svg"></md-icon>
+                    </md-button>
+                    <md-button class="md-fab md-mini" aria-label="Favorite">
+
+                    </md-button>
+                    <span flex></span>
+                    <p>
+                        {{name}}
+                    </p>
+                    <md-button class="md-fab md-mini" aria-label="Favorite">
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </md-content>
+
+        <!--  <md-content class="profile" layout-padding>
+              <md-card id='avatar'>
+                  <img src="card-image.png" class="md-card-image" alt="image caption">
+                  <md-card-content>
+                      <h2>Card headline</h2>
+                      <p>Card content</p>
+                  </md-card-content>
+                  <md-card-footer>
+                      Card footer
+                  </md-card-footer>
+              </md-card>
+          </md-content> -->
+
+        <!-- TABS -->
+        <md-content class="tabs" layout-align="center center">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Info">
+                    <a>Edit</a>
+                    <p>{{userInfo.firstname}}</p>
+                    <p>{{userInfo.lastname}}</p>
+                    <p>{{userInfo.desc}}</p>
+                    <p>{{userInfo.birthdate}}</p>
+                    <p>{{userInfo.denarius}}</p>
+                </md-tab>
+
+                <md-tab label="Challenges">
+                    <md-content class="md-padding">
+                        <ul>
+                            <li ng-repeat="challenge in challenges"> <!--ng-if="challenge.issuer=='kati'-->
+                                <p>{{challenge.title}}</p>
+                                <p>{{challenge.issuer}}</p>
+                            </li>
+                        </ul>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</div>

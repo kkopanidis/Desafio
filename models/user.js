@@ -27,6 +27,9 @@ var mongoose = require('mongoose'),
             },
             isConfirmed: {
                 type: Boolean
+            },
+            info: {
+                type: Schema.Types.ObjectId
             }
         },
         {

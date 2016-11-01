@@ -4,7 +4,8 @@
 var module = angular.module('indexCtrls', []);
 
 //The actual function that will act as the controller
-module.controller('indexCtrl', ['$scope', '$location', '$http', '$cookies', function indexCtrl($scope, $location, $http, $cookies) {
+module.controller('indexCtrl', ['$scope', '$location', '$http', '$cookies',
+    function indexCtrl($scope, $location, $http, $cookies) {
 
     function setCookies(expires, data) {
         var expireDate = new Date();

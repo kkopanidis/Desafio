@@ -18,6 +18,7 @@ var mongoose = require('mongoose'),
                 type: Schema.Types.ObjectId,
                 ref: 'User',
                 required: true
+
             }
         },
         {

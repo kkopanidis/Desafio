@@ -13,7 +13,10 @@ desafio.config(['$routeProvider', '$locationProvider', function ($routeProvider,
         controller: 'indexCtrl'
     }).when('/main', {
         templateUrl: '/partials/main_feed.html',
-        controller: 'mainCtrl'
+        controller: 'mainCtrl',
+    }).when('/profile', {
+        templateUrl: '/partials/profile.html',
+        controller: 'profileCtrl'
     }).otherwise({
         redirectTo: '/'
     });

@@ -130,5 +130,3 @@ function SrchCtrl($http, $cookies, $q) {
 
     }
 }
-
-
