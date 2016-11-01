@@ -77,15 +77,38 @@
 
                 <md-tab label="Challenges">
                     <md-content class="md-padding">
-                        <ul>
+                        <div flex-xs flex-gt-xs="100" layout="column" id="des">
+                            <ul style="list-style-type:none">
                             <li ng-repeat="challenge in challenges">
-                                <p>{{challenge.title}}</p>
-                                <p>{{challenge.issuer}}</p>
+                                <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
+                                    <md-card-title>
+                                        <md-card-title-text>
+                                            <span class="md-headline">{{challenge.title}}</span>
+                                            <span class="md-subhead">{{challenge.issuer}}</span>
+                                        </md-card-title-text>
+                                        <md-card-title-media>
+                                            <div class="md-media-sm card-media"></div>
+                                        </md-card-title-media>
+                                    </md-card-title>
+                                    <md-card-actions layout="row" layout-align="end center">
+                                        <md-button>Like</md-button>
+                                        <md-button>Comment</md-button>
+                                    </md-card-actions>
+                                </md-card>
                             </li>
                         </ul>
+                        </div>
                     </md-content>
                 </md-tab>
             </md-tabs>
         </md-content>
     </div>
 </div>
+
+<style media="screen" type="text/css">
+
+    #des li {
+        margin: 20px 0;
+    }
+
+</style>
