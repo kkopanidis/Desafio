@@ -43,6 +43,10 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             $location.url('/profile');
         };
 
+        $scope.desafio_button = function () {
+            $location.url('/main');
+        };
+
         $scope.search = function () {
             document.getElementById("search_bar").style.display = "inline";
             var element = document.getElementById("search_box");
