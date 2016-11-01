@@ -7,5 +7,14 @@ var module = angular.module('ProfileCtrls', []);
 module.controller('profileCtrl', ['$scope', '$location', '$http', '$cookies',
     function profileCtrl($scope, $location, $http, $cookies) {
 
-        
+        $http.get("/api/users/", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            UserInfo.findById(response.data.info);
+        }, function error(error) {
+
+        });
+
     }]);

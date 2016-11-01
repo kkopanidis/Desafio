@@ -56,25 +56,12 @@
             </md-toolbar>
         </md-content>
 
-        <!--  <md-content class="profile" layout-padding>
-              <md-card id='avatar'>
-                  <img src="card-image.png" class="md-card-image" alt="image caption">
-                  <md-card-content>
-                      <h2>Card headline</h2>
-                      <p>Card content</p>
-                  </md-card-content>
-                  <md-card-footer>
-                      Card footer
-                  </md-card-footer>
-              </md-card>
-          </md-content> -->
-
         <!-- TABS -->
         <md-content class="tabs" layout-align="center center">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Info">
                     <a>Edit</a>
-                    <p>{{userInfo.firstname}}</p>
+                    <p>{{UserInfo.firstname}}</p>
                     <p>{{userInfo.lastname}}</p>
                     <p>{{userInfo.desc}}</p>
                     <p>{{userInfo.birthdate}}</p>
@@ -84,7 +71,7 @@
                 <md-tab label="Challenges">
                     <md-content class="md-padding">
                         <ul>
-                            <li ng-repeat="challenge in challenges"> <!--ng-if="challenge.issuer=='kati'-->
+                            <li ng-repeat="challenge in challenges">
                                 <p>{{challenge.title}}</p>
                                 <p>{{challenge.issuer}}</p>
                             </li>
