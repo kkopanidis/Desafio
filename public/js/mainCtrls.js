@@ -13,6 +13,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             }
         }).then(function success(response) {
             $scope.name = response.data.username
+            $scope.info = UserInfo.findById(response.data.info);
         }, function error(error) {
 
         });
@@ -38,6 +39,9 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
         });
 
+        $scope.profile_button = function () {
+            $location.url('/profile');
+        };
 
         $scope.search = function () {
             document.getElementById("search_bar").style.display = "inline";

@@ -60,12 +60,14 @@
         <md-content class="tabs" layout-align="center center">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Info">
-                    <a>Edit</a>
-                    <p>{{UserInfo.firstname}}</p>
-                    <p>{{userInfo.lastname}}</p>
-                    <p>{{userInfo.desc}}</p>
-                    <p>{{userInfo.birthdate}}</p>
-                    <p>{{userInfo.denarius}}</p>
+                    <md-content>
+                        <a>Edit</a>
+                        <p>{{info.firstname}}</p>
+                        <p>{{info.lastname}}</p>
+                        <p>{{info.desc}}</p>
+                        <p>{{info.birthdate}}</p>
+                        <p>{{info.denarius}}</p>
+                    </md-content>
                 </md-tab>
 
                 <md-tab label="Challenges">
