@@ -51,7 +51,7 @@ router.get('/', passport.authenticate('bearer', {session: false}), function (req
     res.json({
         email: req.user.email,
         username: req.user.username,
-        id: req.data.id
+        id: req.user._id
     });
 });
 
