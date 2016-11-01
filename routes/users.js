@@ -50,7 +50,8 @@ router.post('/logout', passport.authenticate('bearer', {session: false}), functi
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     res.json({
         email: req.user.email,
-        username: req.user.username
+        username: req.user.username,
+        id: req.data.id
     });
 });
 

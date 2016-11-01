@@ -28,6 +28,16 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
         });
 
+        $http.get("/api/des/flow", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.challengeflow = response.data
+        }, function error(error) {
+
+        });
+
 
         $scope.search = function () {
             document.getElementById("search_bar").style.display = "inline";
