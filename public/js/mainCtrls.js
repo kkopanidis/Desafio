@@ -12,7 +12,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
             }
         }).then(function success(response) {
-            $scope.name = response.data.username
+            $scope.name = response.data.username;
             $scope.info = UserInfo.findById(response.data.info);
         }, function error(error) {
 
@@ -34,10 +34,36 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
             }
         }).then(function success(response) {
-            $scope.challengeflow = response.data
+            $scope.challengeflow = response.data;
+            var data = [];
+            for (var i = 0, j = response.data.length; i < j; i++)
+                data.push(response.data[i]._id);
+            $http.post("/api/des/likes/user", {challenges: data}, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                for (var k = 0, p = response.data.length; k < p; k++) {
+                    document.getElementById(response.data[k].challenge).style.color = "#25d5ed";
+                }
+            }, function error(error) {
+                window.alert(error)
+            });
+            $http.post("/api/des/likes/all", {challenges: data}, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                for (var k = 0, p = response.data.length; k < p; k++) {
+                    document.getElementById(response.data[k].challenge + "_count").innerHTML = response.data[k].likes;
+                }
+            }, function error(error) {
+                window.alert(error)
+            });
         }, function error(error) {
 
         });
+
 
         $scope.profile_button = function () {
             $location.url('/profile');
@@ -60,8 +86,23 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
             element.addEventListener('blur', focusChangeListener, false);
             document.getElementById("search_button").style.display = "none";
+        };
 
 
+        $scope.like = function (id) {
+            $http.post("/api/des/like/" + id, {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                if (document.getElementById(id).style.color === "rgb(37, 213, 237)") {
+                    document.getElementById(id).style.color = "black";
+                } else {
+                    document.getElementById(id).style.color = "#25d5ed";
+                }
+            }, function error(error) {
+                console.log(error)
+            });
         };
 
         $scope.showNewChallenge = function (ev) {

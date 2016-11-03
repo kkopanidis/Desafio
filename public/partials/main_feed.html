@@ -78,7 +78,8 @@
                                             </md-card-title-media>
                                         </md-card-title>
                                         <md-card-actions layout="row" layout-align="end center">
-                                            <md-button>Like</md-button>
+                                            Liked by:<p id="{{challenge._id}}_count">0</p>
+                                            <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">Like</md-button>
                                             <md-button>Comment</md-button>
                                         </md-card-actions>
                                     </md-card>
