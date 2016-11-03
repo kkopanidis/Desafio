@@ -12,9 +12,6 @@ var mongoose = require('mongoose'),
         desc: {
             type: String
         },
-        birthdate: {
-            type: Date
-        },
         denarius: {
             type: Number
         },
