@@ -105,6 +105,49 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             });
         };
 
+        $scope.getComments = function (id) {
+            var elem = document.getElementById(id + "_com");
+            if (elem.style.display !== "none") {
+                elem.style.display = "none";
+            } else {
+                elem.style.display = "";
+            }
+
+
+            var item;
+            for (var i = 0, j = $scope.challengeflow.length; i < j; i++) {
+                if ($scope.challengeflow[i]._id === id) {
+                    item = i;
+                    break;
+                }
+            }
+
+            $http.get("/api/des/comments/" + id, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.challengeflow[item].comments = response.data
+            }, function error(error) {
+
+            });
+        };
+
+
+        $scope.comment = function (id) {
+            var com = this.newUserCom;
+            this.newUserCom = "";
+            $http.post("/api/des/comments/" + id, {comment: com}, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.getComments(id);
+            }, function error(error) {
+
+            });
+        };
+
         $scope.showNewChallenge = function (ev) {
             $mdDialog.show({
                 controller: DialogController,

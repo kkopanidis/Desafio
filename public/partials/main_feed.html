@@ -62,7 +62,7 @@
 
         <md-content class="tabs" layout-align="center center">
             <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Flow">
+                <md-tab label="Challenge Feed">
                     <md-content class="md-padding">
                         <div flex-xs flex-gt-xs="100" layout="column" id="flow">
                             <ul style="list-style-type:none">
@@ -79,9 +79,39 @@
                                         </md-card-title>
                                         <md-card-actions layout="row" layout-align="end center">
                                             Liked by:<p id="{{challenge._id}}_count">0</p>
-                                            <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">Like</md-button>
-                                            <md-button>Comment</md-button>
+                                            <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">Like
+                                            </md-button>
+                                            <md-button ng-click="getComments(challenge._id)">Comment</md-button>
                                         </md-card-actions>
+                                        <ul id="{{challenge._id}}_com"
+                                            style="list-style-type:none;padding: 0; display: none ">
+                                            <li>
+                                                <md-card id="userComInput"
+                                                         md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}"
+                                                         md-theme-watch>
+                                                    <md-input-container>
+                                                        <label>Your Comment Here</label>
+                                                        <input ng-model="newUserCom" type="text" required>
+                                                    </md-input-container>
+                                                    <md-button ng-click="comment(challenge._id)">
+                                                        Comment
+                                                    </md-button>
+                                                </md-card>
+                                            </li>
+                                            <li ng-repeat="comment in challenge.comments">
+                                                <md-card
+                                                        md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}"
+                                                        md-theme-watch>
+                                                    <md-card-title>
+                                                        <md-card-title-text>
+                                                            <span class="md-headline">{{comment.user.username}}</span>
+                                                            <span class="md-subhead">{{comment.actual}}</span>
+                                                        </md-card-title-text>
+                                                    </md-card-title>
+                                                </md-card>
+                                            </li>
+
+                                        </ul>
                                     </md-card>
                                 </li>
                             </ul>
