@@ -4,6 +4,7 @@ var router = express.Router();
 var User = require('../models/user');
 var Token = require('../models/accessToken');
 var TokenRef = require('../models/refreshToken');
+var Connect = require('../models/connections');
 var passport = require('passport');
 
 //Register new user
@@ -45,7 +46,72 @@ router.post('/logout', passport.authenticate('bearer', {session: false}), functi
 
 
 });
+//Connect/disconnect with a user
+router.post('/connect/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    Connect.findOne({follower: req.user.userId, followee: req.params.id}, function (err, connection) {
+        if (err) {
+            res.status(500).send(err);
+        } else if (connection) {
+            connection.remove();
+            res.status(200).send("Connection removed!");
+        } else {
+            User.findById(req.params.id)
+                .exec(function (err, user) {
+                    if (err || !user) {
+                        res.status(500).send(err);
+                    } else {
+                        new Connect({
+                            follower: req.user,
+                            followee: user
+                        }).save(function (err) {
+                            if (err) {
+                                res.status(500).send(err);
+                            } else {
+                                res.status(200).send("Done!");
+                            }
+                        })
+                    }
+                })
+        }
+    });
+});
 
+//get the total amount of followers
+router.get('/connect', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    Connect.aggregate([
+        {
+            $match: {
+                'followee': req.user._id
+            }
+        }, {
+            $group: {
+                _id: "$followee",
+                follower: {$push: "$follower"},
+                num: {$sum: 1}
+            }
+        }
+    ], function (err, result) {
+        if (err) {
+            res.status(500).json({
+                error: err
+            });
+        } else {
+            res.status(200).json(result);
+        }
+    });
+});
+//Connect/disconnect with a user
+router.get('/connect/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    Connect.findOne({follower: req.user.userId, followee: req.params.id}, function (err, connection) {
+        if (err) {
+            res.status(500).send(err);
+        } else if (!connection) {
+            res.status(200).send("Not followed");
+        } else {
+            res.status(200).send("followed");
+        }
+    });
+});
 /* GET user info*/
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     res.json({

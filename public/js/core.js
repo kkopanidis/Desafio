@@ -1,5 +1,6 @@
 // public/core.js
-var desafio = angular.module('desafio', ['ngRoute', 'indexCtrls','MainCtrls','ngMaterial','ngAnimate', 'ngCookies', 'ngSanitize']);
+var desafio = angular.module('desafio', ['ngRoute', 'indexCtrls','MainCtrls','profCtrl','feedCtrl',
+    'ngMaterial','ngAnimate', 'ngCookies', 'ngSanitize']);
 
 
 //All will be changed
@@ -12,10 +13,13 @@ desafio.config(['$routeProvider', '$locationProvider', function ($routeProvider,
         templateUrl: '/partials/register.html',
         controller: 'indexCtrl'
     }).when('/main', {
-        templateUrl: '/partials/main_feed.html',
-        controller: 'mainCtrl',
+        templateUrl: '/partials/main.html',
+        controller: 'mainCtrl'
     }).when('/profile', {
-        templateUrl: '/partials/profile.html',
+        templateUrl: '/partials/main.html',
+        controller: 'mainCtrl'
+    }).when('/profile/:id', {
+        templateUrl: '/partials/main.html',
         controller: 'mainCtrl'
     }).otherwise({
         redirectTo: '/'
