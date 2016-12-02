@@ -4,12 +4,18 @@
 var module = angular.module('MainCtrls', []);
 
 //The actual function that will act as the controller
-module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog',
-    function indexCtrl($scope, $location, $http, $cookies, $mdDialog) {
+module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc',
+    function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc) {
 
-        if($location.url() == "/main"){
+        userSrvc.cookieLog(function (error, response) {
+            if (error) {
+                $location.url("/");
+            }
+        });
+
+        if ($location.url() == "/main") {
             $scope.loc = 'mainFeed';
-        }else{
+        } else {
             $scope.loc = 'profile';
         }
 
@@ -30,6 +36,15 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
         $scope.desafio_button = function () {
             $location.url('/main');
+        };
+        $scope.logout = function () {
+            userSrvc.logout(function (err, result) {
+                if (err) {
+                    window.alert("Something went wrong :/");
+                } else {
+                    $location.url("/");
+                }
+            });
         };
 
         $scope.search = function () {
@@ -92,7 +107,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
     }]);
 
-module.controller('SrchCtrl', ['$http', '$cookies', '$q','$location', SrchCtrl]);
+module.controller('SrchCtrl', ['$http', '$cookies', '$q', '$location', SrchCtrl]);
 
 function SrchCtrl($http, $cookies, $q, $location) {
 
@@ -130,7 +145,7 @@ function SrchCtrl($http, $cookies, $q, $location) {
 
     //Go to selected user profile
     function selectedItemChange(item) {
-        $location.url("/profile/"+item._id);
+        $location.url("/profile/" + item._id);
 
     }
 }

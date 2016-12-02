@@ -1,6 +1,6 @@
 // public/core.js
 var desafio = angular.module('desafio', ['ngRoute', 'indexCtrls','MainCtrls','profCtrl','feedCtrl',
-    'ngMaterial','ngAnimate', 'ngCookies', 'ngSanitize']);
+    'ngMaterial','ngAnimate', 'ngCookies', 'ngSanitize', 'userSrvc']);
 
 
 //All will be changed
