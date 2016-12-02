@@ -1,4 +1,4 @@
-<md-content class="tabs" layout-align="center center" ng-controller ="feedCtrl">
+<md-content class="tabs" layout-align="center center" ng-controller="feedCtrl">
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Challenge Feed">
             <md-content class="md-padding">
@@ -15,7 +15,10 @@
                                         <div class="md-media-sm card-media"></div>
                                     </md-card-title-media>
                                 </md-card-title>
+
                                 <md-card-actions layout="row" layout-align="end center">
+                                    <md-button ng-click="showSendChallenge($event)">Send to...</md-button>
+                                    <span flex></span>
                                     Liked by:<p id="{{challenge._id}}_count">0</p>
                                     <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">Like
                                     </md-button>
