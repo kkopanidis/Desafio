@@ -5,7 +5,8 @@ var Challenge = require('../models/challenge');
 var Like = require('../models/like');
 var Comment = require('../models/comment');
 var mongoose = require('mongoose');
-
+var Gaunlet = require('../models/gauntlet');
+var GaunletStatus = require('../models/gauntletStatus');
 
 //Get this users' challenges
 router.get('/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
@@ -82,6 +83,45 @@ router.post('/', passport.authenticate('bearer', {session: false}), function (re
             res.status(200).send("Challenge Created");
         }
     })
+
+});
+//Create a new challenge
+router.post('/gaunlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    if (req.body[0] === undefined)
+        res.status(500).send("Error");
+    var challengees = req.body[0], fail;
+    for (var i = 0, j = req.body[0].length; i < j; i++) {
+        new Gaunlet({
+            challenger: req.user,
+            challengee: challengees[i],
+            challenge: req.body[1],
+            status: new GaunletStatus()
+        }).save(function (err) {
+            //Should we stop?
+            if (err)
+                fail = 1;
+        });
+    }
+
+    res.status(200).send("Challenge Created");
+
+
+});
+//Create a new challenge
+router.get('/gaunlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    Gaunlet.find({})
+        .where('challenger').equals(req.user)
+        .populate('challenger','username')
+        .populate('challengee','username')
+        .exec(function (err, result) {
+            if (err || !result) {
+                res.status(500).send("Something went wrong");
+            } else {
+                res.status(200).send(result);
+            }
+        });
 
 });
 

@@ -6,7 +6,7 @@ var module = angular.module('MainCtrls', []);
 //The actual function that will act as the controller
 module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc',
     function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc) {
-
+        var activeSendId;
         userSrvc.cookieLog(function (error, response) {
             if (error) {
                 $location.url("/");
@@ -64,6 +64,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
 
         $scope.showNewChallenge = function (ev) {
+
             $mdDialog.show({
                 controller: DialogController,
                 templateUrl: 'partials/dialog1.tmpl.html',
@@ -71,14 +72,14 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 targetEvent: ev,
                 clickOutsideToClose: true,
                 fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-            })
-                .then(function (answer) {
-                    $scope.status = 'You said the information was "' + answer + '".';
-                }, function () {
-                    $scope.status = 'You cancelled the dialog.';
-                });
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
         };
-        $scope.showSendChallenge = function (ev) {
+        $scope.showSendChallenge = function (ev, id) {
+            activeSendId = id;
             $mdDialog.show({
                 controller: SendDialogController,
                 templateUrl: 'partials/send_list.tmpl.html',
@@ -86,12 +87,11 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 targetEvent: ev,
                 clickOutsideToClose: true,
                 fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-            })
-                .then(function (answer) {
-                    $scope.status = 'You said the information was "' + answer + '".';
-                }, function () {
-                    $scope.status = 'You cancelled the dialog.';
-                });
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
         };
 
 
@@ -138,6 +138,20 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             };
 
             $scope.answer = function (answer) {
+                var send = [];
+                for (var i = 0, j = $scope.data.length; i < j; i++) {
+                    if ($scope.data[i].send)
+                        send.push($scope.data[i]);
+                }
+                $http.post("/api/des/gaunlet", [send, activeSendId], {
+                    headers: {
+                        'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                    }
+                }).then(function success(response) {
+                    window.alert("Success");
+                }, function error(error) {
+                    window.alert("Failed");
+                });
                 $mdDialog.hide();
 
             };

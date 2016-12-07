@@ -50,6 +50,15 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
         }, function error(error) {
 
         });
+        $http.get("/api/des/gaunlet", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.gaunletflow = response.data;
+        }, function error(error) {
+
+        });
 
 
         $scope.like = function (id) {
