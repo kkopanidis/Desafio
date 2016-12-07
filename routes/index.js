@@ -1,10 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
-
+var client = require('../models/client');
 //send the partial
 router.get('/partial/:name', function (req, res, next) {
   res.sendFile(path.join(__dirname, 'public/partial/' + req.params.name));
+});
+router.get('/test', function (req, res, next) {
+  new client({
+    name: "web",
+    clientId: "Axxh45u4bdajGDshjk21n",
+    clientSecret: "d13e~223~!!@$5dasd"
+  }).save(function (err, result) {
+    if (err) {
+      res.status(500).send();
+    } else {
+      res.status(200).send();
+    }
+  })
 });
 
 //No matter what the request, always send the index page first

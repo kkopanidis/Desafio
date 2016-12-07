@@ -96,10 +96,21 @@ router.get('/connect', passport.authenticate('bearer', {session: false}), functi
                 error: err
             });
         } else {
-            res.status(200).json(result);
+            Connect.populate(result, {path: "follower"}, function (err, result) {
+                if (err) {
+                    res.status(500).json({
+                        error: err
+                    });
+                } else {
+                    res.status(200).json(result);
+                }
+            });
+
         }
     });
 });
+
+
 //Connect/disconnect with a user
 router.get('/connect/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     Connect.findOne({follower: req.user.userId, followee: req.params.id}, function (err, connection) {

@@ -78,6 +78,21 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                     $scope.status = 'You cancelled the dialog.';
                 });
         };
+        $scope.showSendChallenge = function (ev) {
+            $mdDialog.show({
+                controller: SendDialogController,
+                templateUrl: 'partials/send_list.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            })
+                .then(function (answer) {
+                    $scope.status = 'You said the information was "' + answer + '".';
+                }, function () {
+                    $scope.status = 'You cancelled the dialog.';
+                });
+        };
 
 
         function DialogController($scope, $mdDialog) {
@@ -101,6 +116,30 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 }, function error(error) {
                     window.alert("Failed");
                 });
+            };
+        }
+
+        function SendDialogController($scope, $mdDialog) {
+            $http.get("/api/users/connect", {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.data = response.data[0].follower;
+            }, function error(error) {
+                window.alert("Failed");
+            });
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+            $scope.answer = function (answer) {
+                $mdDialog.hide();
+
             };
         }
 

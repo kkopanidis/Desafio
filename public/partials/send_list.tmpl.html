@@ -11,30 +11,16 @@
         </md-toolbar>
 
         <md-dialog-content layout="column">
-            <div class="md-dialog-content">
-                <md-input-container>
-                    <label>Challenge Name</label>
-                    <input ng-model="challenge.name" type="text" required>
-                </md-input-container>
+            <md-list>
+                <md-list-item class="md-2-line" ng-repeat="follower in data">
+                    <div class="md-list-item-text">
+                        <h3>{{follower.username}}</h3>
+                    </div>
+                    <md-button class="md-fab md-mini" aria-label="Favorite">
 
-                <md-input-container>
-                    <label>Challenge Description</label>
-                    <input ng-model="challenge.desc" type="text" required>
-                </md-input-container>
-
-                <md-input-container>
-                    <label>Challenge type</label>
-                    <md-select name="type" ng-model="challenge.type" required>
-                        <md-option value="sport">Sports</md-option>
-                        <md-option value="food">Eating</md-option>
-                    </md-select>
-                </md-input-container>
-
-                <md-input-container>
-                    <label>Valid until</label>
-                    <md-datepicker ng-model="user.dob" md-placeholder="Enter date"></md-datepicker>
-                </md-input-container>
-            </div>
+                    </md-button>
+                </md-list-item>
+            </md-list>
 
         </md-dialog-content>
 

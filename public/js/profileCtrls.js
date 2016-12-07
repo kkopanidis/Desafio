@@ -13,8 +13,8 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                         'Authorization': 'Bearer ' + $cookies.get('auth_0')
                     }
                 }).then(function success(response) {
-                    if (response.data.num) {
-                        $scope.followers = response.data.num;
+                    if (response.data[0].num) {
+                        $scope.followers = response.data[0].num;
                     } else {
                         $scope.followers = 0;
                     }
