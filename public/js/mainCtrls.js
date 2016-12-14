@@ -6,29 +6,23 @@ var module = angular.module('MainCtrls', []);
 //The actual function that will act as the controller
 module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc',
     function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc) {
+
         var activeSendId;
         userSrvc.cookieLog(function (error, response) {
             if (error) {
                 $location.url("/");
+            } else {
+                $scope.name = response.username;
+                $scope.info = UserInfo.findById(response.info);
             }
         });
 
+        //Depending on the url show a different partial on the main.html
         if ($location.url() == "/main") {
             $scope.loc = 'mainFeed';
         } else {
             $scope.loc = 'profile';
         }
-
-        $http.get("/api/users/", {
-            headers: {
-                'Authorization': 'Bearer ' + $cookies.get('auth_0')
-            }
-        }).then(function success(response) {
-            $scope.name = response.data.username;
-            $scope.info = UserInfo.findById(response.data.info);
-        }, function error(error) {
-
-        });
 
         $scope.profile_button = function () {
             $location.url('/profile');
@@ -37,6 +31,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
         $scope.desafio_button = function () {
             $location.url('/main');
         };
+
         $scope.logout = function () {
             userSrvc.logout(function (err, result) {
                 if (err) {
@@ -47,12 +42,16 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             });
         };
 
+        //Once search is clicked show the search input
         $scope.search = function () {
+            var element = document.querySelector("#search_box");
             document.getElementById("search_bar").style.display = "inline";
-            var element = document.getElementById("search_box");
             element.focus();
 
+            //If the search input loses focus collapse it
             function focusChangeListener() {
+                if (document.activeElement === element)
+                    return;
                 document.getElementById("search_bar").style.display = "none";
                 document.getElementById("search_button").style.display = "inline";
                 element.removeEventListener('blur', focusChangeListener, false);
@@ -63,6 +62,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
         };
 
 
+        //Show the new challenge dialog
         $scope.showNewChallenge = function (ev) {
 
             $mdDialog.show({
@@ -78,6 +78,8 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $scope.status = 'You cancelled the dialog.';
             });
         };
+
+        //Show the send challenge dialog
         $scope.showSendChallenge = function (ev, id) {
             activeSendId = id;
             $mdDialog.show({
@@ -139,10 +141,12 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
             $scope.answer = function (answer) {
                 var send = [];
+                //Iterate over the elements and keep the checked ones
                 for (var i = 0, j = $scope.data.length; i < j; i++) {
                     if ($scope.data[i].send)
                         send.push($scope.data[i]);
                 }
+                //Send the checked users and the challenge id to the server
                 $http.post("/api/des/gaunlet", [send, activeSendId], {
                     headers: {
                         'Authorization': 'Bearer ' + $cookies.get('auth_0')
@@ -180,9 +184,7 @@ function SrchCtrl($http, $cookies, $q, $location) {
             defered.resolve([]);
         });
 
-
         return defered.promise;
-
     }
 
     var self = this;
@@ -193,12 +195,12 @@ function SrchCtrl($http, $cookies, $q, $location) {
 
 
     function searchTextChange(text) {
-
     }
 
     //Go to selected user profile
     function selectedItemChange(item) {
-        $location.url("/profile/" + item._id);
+        if (item.username)
+            $location.url("/profile/" + item._id);
 
     }
 }

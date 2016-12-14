@@ -38,7 +38,7 @@ var mongoose = require('mongoose'),
         });
 
 User.methods.encryptPassword = function (password) {
-    return crypto.pbkdf2Sync(password, this.salt, 10000, 512).toString('hex');
+    return crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha1').toString('hex');
 };
 
 User.virtual('userId')
