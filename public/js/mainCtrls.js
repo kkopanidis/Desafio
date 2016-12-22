@@ -13,8 +13,17 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $location.url("/");
             } else {
                 $scope.name = response.username;
-                $scope.info = UserInfo.findById(response.info);
+
             }
+        });
+        $http.get("/api/users/notif", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.notifications = response.data;
+        }, function error(error) {
+            window.alert("Failed");
         });
 
         //Depending on the url show a different partial on the main.html

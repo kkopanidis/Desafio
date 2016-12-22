@@ -2,7 +2,7 @@
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Feed">
             <md-content class="md-padding">
-                <div flex-xs flex-gt-xs="100" layout="column" id="flow">
+                <div flex-xs flex-gt-xs="100" layout="column">
                     <ul style="list-style-type:none">
                         <li ng-repeat="challenge in challengeflow">
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
@@ -62,14 +62,15 @@
         </md-tab>
         <md-tab label="Gaunlets">
             <md-content class="md-padding">
-                <div flex-xs flex-gt-xs="100" layout="column" id="flow">
+                <div flex-xs flex-gt-xs="100" layout="column" >
                     <ul style="list-style-type:none">
                         <li ng-repeat="challenge in gaunletflow">
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-headline">{{challenge.challengee.username}}</span>
-                                        <span class="md-subhead">Challenged by: {{challenge.challenger.username}}</span>
+                                        <span class="md-headline">{{challenge.challenge.title}}</span>
+                                        <span class="md-subhead">To: {{challenge.challengee.username}}
+                                            From: {{challenge.challenger.username}}</span>
                                     </md-card-title-text>
                                     <md-card-title-media>
                                         <div class="md-media-sm card-media"></div>

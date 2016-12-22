@@ -131,5 +131,15 @@ router.get('/', passport.authenticate('bearer', {session: false}), function (req
         id: req.user._id
     });
 });
+/* GET notifications*/
+router.get('/notif', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    req.user.populate('notifications', function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).json(result.notifications);
+        }
+    })
+});
 
 module.exports = router;

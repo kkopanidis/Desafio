@@ -6,6 +6,8 @@ var profCtrl = angular.module('profCtrl', []);
 //The actual function that will act as the controller
 profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$routeParams',
     function profCtrl($scope, $location, $http, $cookies, $routeParams) {
+
+
         function getFollowers() {
             if ($scope.own || !$routeParams.id) {
                 $http.get("/api/users/connect", {
@@ -56,8 +58,28 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
         if ($routeParams.id) {
             own();
             status();
+
+            $http.get("/api/des/gaunlet/"+$routeParams.id, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.challenges = response.data;
+            }, function error(error) {
+
+            });
         } else {
             $scope.own = true;
+
+            $http.get("/api/des/gaunlet/self", {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.challenges = response.data;
+            }, function error(error) {
+
+            });
         }
         getFollowers();
 

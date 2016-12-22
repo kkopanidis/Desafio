@@ -1,8 +1,8 @@
 <div class="wrapper">
     <div class="container">
-        <md-content>
+        <md-content flex="noshrink">
             <md-toolbar>
-                <div class="md-toolbar-tools">
+                <div class="md-toolbar-tools" layout-gt-xs="row" layout="column" flex="noshrink">
                     <h2>
                         <span><md-button md-no-ink class="md-primary" ng-click="desafio_button()"
                                          style="color:white;
@@ -11,80 +11,85 @@
                         </md-button></span>
                     </h2>
                     <span flex></span>
-                    <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="showNewChallenge($event)">
-                        <md-icon md-svg-icon="../img/ic_add_white_36px.svg"></md-icon>
-                    </md-button>
-                    <form ng-controller="SrchCtrl as ctrl" id="search_bar" ng-submit="$event.preventDefault()"
-                          style= "display: none;">
-                        <md-autocomplete
-
-                                md-input-id="search_box"
-                                ng-disabled="ctrl.isDisabled"
-                                md-no-cache="ctrl.noCache"
-                                md-selected-item="ctrl.selectedItem"
-                                md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                                md-search-text="ctrl.searchText"
-                                md-selected-item-change="ctrl.selectedItemChange(item)"
-                                md-items="item in ctrl.querySearch(ctrl.searchText)"
-                                md-item-text="item.username"
-                                md-min-length="0"
-                                placeholder="Search"
-                                md-menu-class="autocomplete-custom-template">
-                            <md-item-template>
+                    <div style="background: transparent">
+                        <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="showNewChallenge($event)">
+                            <md-icon md-svg-icon="../img/ic_add_white_36px.svg"></md-icon>
+                        </md-button>
+                        <form ng-controller="SrchCtrl as ctrl" id="search_bar" ng-submit="$event.preventDefault()"
+                              style="display: none;">
+                            <md-autocomplete
+                                    md-input-id="search_box"
+                                    ng-disabled="ctrl.isDisabled"
+                                    md-no-cache="ctrl.noCache"
+                                    md-selected-item="ctrl.selectedItem"
+                                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                                    md-search-text="ctrl.searchText"
+                                    md-selected-item-change="ctrl.selectedItemChange(item)"
+                                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                                    md-item-text="item.username"
+                                    md-min-length="0"
+                                    placeholder="Search"
+                                    md-menu-class="autocomplete-custom-template">
+                                <md-item-template>
                                   <span class="item-title" ng-if="item.username">
                                     <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
                                     <span> {{item.username}} </span>
                                   </span>
-                                <span class="item-title" ng-if="item.title">
+                                    <span class="item-title" ng-if="item.title">
                                     <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
                                     <span> {{item.title}} </span>
                                   </span>
-                                <!--<span class="item-metadata">-->
-                                <!--<span class="item-metastat">-->
-                                <!--<strong>{{item.watchers}}</strong> watchers-->
-                                <!--</span>-->
-                                <!--<span class="item-metastat">-->
-                                <!--<strong>{{item.forks}}</strong> forks-->
-                                <!--</span>-->
-                                <!--</span>-->
-                            </md-item-template>
-                        </md-autocomplete>
-                    </form>
+                                </md-item-template>
+                            </md-autocomplete>
+                        </form>
 
-                    <md-button id="search_button" class="md-fab md-mini" aria-label="Favorite" ng-click="search()">
-                        <md-icon md-svg-icon="../img/ic_search_white_36px.svg"></md-icon>
-                    </md-button>
-                    <md-button class="md-fab md-mini" aria-label="Favorite">
-                        <md-icon md-svg-icon="../img/ic_notifications_white_48px.svg"></md-icon>
-                    </md-button>
+                        <md-button id="search_button" class="md-fab md-mini" aria-label="Favorite" ng-click="search()">
+                            <md-icon md-svg-icon="../img/ic_search_white_36px.svg"></md-icon>
+                        </md-button>
+                        <md-menu md-position-mode="target-right target">
+                            <md-button class="md-fab md-mini md-icon-button" aria-label="Favorite"
+                                       ng-click="$mdOpenMenu($event)">
+                                <md-icon md-menu-origin md-svg-icon="../img/ic_notifications_white_48px.svg"></md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item ng-repeat="notif in notifications">
+                                    <!--This is kept here so that if we need icons we can enable them later one-->
+                                    <!--<md-button ng-click="ctrl.announceClick($index)">-->
+                                    <!--<div layout="row" flex>-->
+                                    <!--<p flex>Option {{item}}</p>-->
+                                    <!--<md-icon md-menu-align-target md-svg-icon="call:portable-wifi-off" style="margin: auto 3px auto 0;"></md-icon>-->
+                                    <!--</div>-->
+                                    <!--</md-button>-->
+                                    <div layout="row" flex>
+                                        <p flex>{{notif.text}}</p>
+                                    </div>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
+                    </div>
                     <span flex></span>
 
                     <p>
                         {{name}}
                     </p>
-                    <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="profile_button()">
-                        <md-icon md-svg-icon="../img/ic_account_circle_white_48px.svg"></md-icon>
+                    <div style="background: transparent">
+                        <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="profile_button()">
+                            <md-icon md-svg-icon="../img/ic_account_circle_white_48px.svg"></md-icon>
 
-                    </md-button>
-                    <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="logout()">
-                        <md-icon md-svg-icon="../img/ic_exit_to_app_white_48px.svg"></md-icon>
-                    </md-button>
+                        </md-button>
+                        <md-button class="md-fab md-mini" aria-label="Favorite" ng-click="logout()">
+                            <md-icon md-svg-icon="../img/ic_exit_to_app_white_48px.svg"></md-icon>
+                        </md-button>
+                    </div>
                 </div>
             </md-toolbar>
         </md-content>
 
-        <ng-include src=" 'partials/' + loc+ '.html' ">
+        <ng-include src=" 'partials/' + loc+ '.html' " flex layout="column">
 
 
         </ng-include>
 
     </div>
 </div>
-
-<style media="screen" type="text/css">
-
-    #flow li {
-        margin: 20px 0;
-    }
-
-</style>

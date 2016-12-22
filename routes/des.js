@@ -7,7 +7,7 @@ var Comment = require('../models/comment');
 var mongoose = require('mongoose');
 var Gaunlet = require('../models/gauntlet');
 var GaunletStatus = require('../models/gauntletStatus');
-
+var Notifications = require("../logic/notifications");
 //Get this users' challenges
 router.get('/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
@@ -97,10 +97,14 @@ router.post('/gaunlet', passport.authenticate('bearer', {session: false}), funct
             challengee: challengees[i],
             challenge: req.body[1],
             status: new GaunletStatus()
-        }).save(function (err) {
+        }).save(function (err,result) {
             //Should we stop?
             if (err)
                 fail = 1;
+            else {
+                Notifications.sendNotification(result.challengee, "You have been challenged by: " + req.user.username +
+                    " check your profile!")
+            }
         });
     }
 
@@ -108,13 +112,49 @@ router.post('/gaunlet', passport.authenticate('bearer', {session: false}), funct
 
 
 });
-//Create a new challenge
+
+//Get gaunlets in general
 router.get('/gaunlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Gaunlet.find({})
-        .where('challenger').equals(req.user)
-        .populate('challenger','username')
-        .populate('challengee','username')
+        .populate('challenge', 'title')
+        .populate('challenger', 'username')
+        .populate('challengee', 'username')
+        .exec(function (err, result) {
+            if (err || !result) {
+                res.status(500).send("Something went wrong");
+            } else {
+                res.status(200).send(result);
+            }
+        });
+
+});
+
+//Get gaunlets thrown at me
+router.get('/gaunlet/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    Gaunlet.find({})
+        .where('challengee').equals(req.user)
+        .populate('challenge', 'title')
+        .populate('challenger', 'username')
+        .populate('challengee', 'username')
+        .exec(function (err, result) {
+            if (err || !result) {
+                res.status(500).send("Something went wrong");
+            } else {
+                res.status(200).send(result);
+            }
+        });
+
+});
+//Get gaunlets thrown at me
+router.get('/gaunlet/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    Gaunlet.find({})
+        .where('challengee').equals(req.params.id)
+        .populate('challenge', 'title')
+        .populate('challenger', 'username')
+        .populate('challengee', 'username')
         .exec(function (err, result) {
             if (err || !result) {
                 res.status(500).send("Something went wrong");

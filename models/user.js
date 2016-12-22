@@ -31,7 +31,11 @@ var mongoose = require('mongoose'),
             info: {
                 type: Schema.Types.ObjectId,
                 ref: 'UserInfo'
-            }
+            },
+            notifications: [{
+                type: Schema.Types.ObjectId,
+                ref: 'Notification'
+            }]
         },
         {
             timestamps: true

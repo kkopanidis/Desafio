@@ -29,8 +29,10 @@
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-headline">{{challenge.title}}</span>
-                                        <span class="md-subhead">{{challenge.issuer}}</span>
+                                        <span class="md-headline">{{challenge.challenge.title}}</span>
+                                        <span class="md-subhead">To: {{challenge.challengee.username}}
+                                            From: {{challenge.challenger.username}}</span>
+
                                     </md-card-title-text>
                                     <md-card-title-media>
                                         <div class="md-media-sm card-media"></div>
