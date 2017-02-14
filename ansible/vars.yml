@@ -1,0 +1,61 @@
+---
+# A unix path-friendly name (i.e., no spaces or special characters)
+project_name: desafio
+
+# The base path to install to. You should not need to change this.
+install_root: /srv
+
+# Any directories that need to be added to the PYTHONPATH.
+pythonpath: "{{ install_root }}/{{ project_name }}/project_site"
+
+# The git repository URL for the project
+project_repo: git@github.com:kkopanidis/Desafio.git
+
+# A private key that has access to the repository URL
+ssh_private_key: ~/.ssh/id_rsa
+
+# The value of your django project's STATIC_ROOT settings.
+# This will be the directory that django's `collectstatic` management command
+# copies static files to, and it must be an absolute path. The default value 
+# here assumes that STATIC_ROOT is set in your settings.py like so:
+# STATIC_ROOT = os.path.abspath(os.path.join(PROJECT_ROOT, 'static'))
+static_root: "{{ install_root }}/{{ project_name }}/static"
+
+# the dns name or names (space separated) for your server
+server_name: snf-726717.vm.okeanos.grnet.gr
+
+# Database setup. Note that because this playbook doesn't touch the default 
+# MySQL configuration file, we use local password-based authentication for
+# MySQL and thus you need to provide a username and password, and your
+# settings.py must set "localhost" or "127.0.0.1" as the HOST value. For
+# example, the default settings here assume the following values in
+# settings.py:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'localhost',
+#         'NAME': 'djbr',
+#         'USER': 'djbr_user',
+#         'PASSWORD': 'changeme',
+#     }
+# }
+
+db_name: desafio
+
+user: user
+
+# apt packages, you should not need to change this unless you have packages
+# listed in your requirements.txt that depend on system packages.
+system_packages:
+  - git
+  - nginx
+  - npm
+  - nodejs
+  - vim
+  - python-pip
+  - python3-pip
+  - python3-dev
+  - apt-transport-https ca-certificate
+  - linux-image-extra-$(uname -r) linux-image-extra-virtual
+
+# vim:ft=ansible:

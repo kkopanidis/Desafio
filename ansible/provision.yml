@@ -1,0 +1,59 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  become: yes
+
+  tasks:
+    - name: install system packages
+      apt: pkg={{ item }} update-cache=yes
+      with_items: "{{ system_packages }}"
+
+    - name: Save ssh private key to server
+      copy:
+        src: "{{ ssh_private_key }}"
+        dest: /root/.ssh/id_rsa
+        mode: 0600
+
+    - name: create directory for app
+      file: path={{ install_root }}/{{ project_name }} state=directory
+
+    - name: make sure mongodb is running
+      docker:
+        name: mongodes
+        state: started
+
+    - name: set db root password
+      mysql_user:
+        name: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        priv: "*.*:ALL,GRANT"
+        state: "present"
+      with_items:
+        - "{{ server_name }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
+      
+    - name: create database
+      mysql_db:
+        name: "{{ db_name }}"
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: create database user
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"        
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+
+    - name: remove default nginx site
+      file: path=/etc/nginx/sites-enabled/default state=absent
+
+- include: deploy.yml
+
+# vim:ft=ansible:

@@ -1,0 +1,109 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  become: yes
+  
+  tasks:
+    - name: clone/pull project repo
+      git:
+        repo: "{{ project_repo }}"
+        dest: "{{ install_root }}/{{ project_name }}"
+        accept_hostkey: yes
+      notify:
+      - restart gunicorn
+      
+    - name: install python packages
+      pip:
+        requirements: "{{ install_root }}/{{ project_name }}/requirements.txt"
+        executable: pip3
+      notify:
+
+    - name: copy nginx config
+      template: src=files/nginx.j2 dest=/etc/nginx/sites-enabled/{{ project_name }}.conf
+      notify:
+      - restart nginx
+
+    - name: enable ngnix at startup
+      service: name=nginx enabled=yes
+
+    - name: Add Docker repository key
+      apt_key:
+        id: "58118E89F3A912897C070ADBF76221572C52609D"
+        keyserver: "hkp://ha.pool.sks-keyservers.net:80"
+        state: present
+
+    - name: print to stdout
+      command: echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | tee /etc/apt/sources.list.d/docker.list
+      update_cache: yes
+      state: present
+
+    - name: Install docker engine
+      apt:
+        pkg: docker engine
+        state: installed
+
+    - name: Make sure docker is running
+      service:
+        name: docker
+        state: started
+
+    - name: add group docker
+      groupadd:
+        name: docker
+        state: present
+
+    - name: add user to docker group
+      user:
+        name: {{ user }}
+        group: docker
+        append: yes
+
+    - systemd:
+      name: docker
+      state: started
+      enabled: True
+
+    - name: reboot server
+      shell: reboot
+      async: 0
+      poll: 0 
+
+    - name: data container
+      docker:
+        name: desdata
+        image: busybox
+        state: present
+        volumes:
+        - /data
+
+    - name: mongo container
+      docker:
+        name: mongodes
+        image: mongo
+        state: started
+        expose:
+        - 27017
+        volumes_from:
+        - desdata
+
+    - name: build the image
+      command: docker build -t desafio:latest
+
+    - name: run desafio in a docker container
+      docker:
+        name: desafio
+        image: "desafio:latest"
+        state: reloaded
+        pull: always
+        ports:
+          "80:3000"
+        detatch: True
+        use_tls: encrypt
+
+      handlers: 
+        - name: restart nginx
+          service: name=nginx state=restarted
+
+# vim:ft=ansible:
