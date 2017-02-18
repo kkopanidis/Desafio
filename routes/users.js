@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var userInfo = require('../models/userInfo');
 var Token = require('../models/accessToken');
 var TokenRef = require('../models/refreshToken');
 var Connect = require('../models/connections');
@@ -125,11 +126,62 @@ router.get('/connect/:id', passport.authenticate('bearer', {session: false}), fu
 });
 /* GET user info*/
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
-    res.json({
-        email: req.user.email,
-        username: req.user.username,
-        id: req.user._id
+    req.user.populate('info', function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (req.user.info)
+                res.json({
+                    email: req.user.email,
+                    username: req.user.username,
+                    firstname: req.user.info.firstname,
+                    lastname: req.user.info.lastname,
+                    dob: req.user.dob,
+                    denarious: req.user.info.denarious,
+                    id: req.user._id
+                });
+            else {
+                res.json({
+                    email: req.user.email,
+                    username: req.user.username,
+                    dob: req.user.dob,
+                    id: req.user._id
+                });
+            }
+        }
     });
+
+});
+/* Update user info*/
+router.post('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    req.user.populate('info', function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            if (!req.user.info) {
+                req.user.info = new userInfo({});
+            }
+            req.user.username = req.body.username;
+            req.user.info.firstname = req.body.firstname;
+            req.user.info.lastname = req.body.lastname;
+            req.user.info.save(function (err) {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    req.user.save(function (err) {
+                        if (err) {
+                            res.status(500).send(err);
+                        } else {
+                            res.status(200).send("OK");
+                        }
+                    });
+                }
+            });
+        }
+    });
+
 });
 /* GET notifications*/
 router.get('/notif', passport.authenticate('bearer', {session: false}), function (req, res, next) {

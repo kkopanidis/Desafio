@@ -15,7 +15,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                         'Authorization': 'Bearer ' + $cookies.get('auth_0')
                     }
                 }).then(function success(response) {
-                    if (response.data[0].num) {
+                    if (response.data.length > 0 && response.data[0].num) {
                         $scope.followers = response.data[0].num;
                     } else {
                         $scope.followers = 0;
@@ -48,7 +48,9 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
             }).then(function success(response) {
-                $scope.own = $routeParams.id === response.data.id;
+                if ($routeParams.id)
+                    $scope.own = $routeParams.id === response.data.id;
+                $scope.info = response.data;
 
             }, function error(error) {
 
@@ -59,7 +61,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
             own();
             status();
 
-            $http.get("/api/des/gaunlet/"+$routeParams.id, {
+            $http.get("/api/des/gaunlet/" + $routeParams.id, {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
@@ -69,6 +71,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
 
             });
         } else {
+            own();
             $scope.own = true;
 
             $http.get("/api/des/gaunlet/self", {
@@ -91,6 +94,18 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                 }
             }).then(function success(response) {
                 status();
+            }, function error(error) {
+                window.alert("Failed");
+            });
+        };
+
+        $scope.updateInfo = function () {
+            $http.post("/api/users/", $scope.info, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                window.alert("All done!");
             }, function error(error) {
                 window.alert("Failed");
             });

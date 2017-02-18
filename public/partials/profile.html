@@ -12,12 +12,11 @@
     <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Info">
             <md-content>
-                <a>Edit</a>
-                <p>{{info.firstname}}</p>
-                <p>{{info.lastname}}</p>
-                <p>{{info.desc}}</p>
-                <p>{{info.birthdate}}</p>
-                <p>{{info.denarius}}</p>
+                <p>Username: {{info.username}}</p>
+                <p>E-mail: {{info.email}}</p>
+                <p>First Name: {{info.firstname}}</p>
+                <p>Last Name: {{info.lastname}}</p>
+                <p>Date of Birth: {{info.dob}}</p>
             </md-content>
         </md-tab>
 
@@ -45,6 +44,19 @@
                             </md-card>
                         </li>
                     </ul>
+                </div>
+            </md-content>
+        </md-tab>
+        <md-tab label="Settings">
+            <md-content class="md-padding">
+                <div flex-xs flex-gt-xs="100" layout="column">
+                    <label>Username:</label>
+                    <input type="text" ng-model="info.username">
+                    <label>First Name:</label>
+                    <input type="text" ng-model="info.firstname">
+                    <label>Last Name:</label>
+                    <input type="text" ng-model="info.lastname">
+                    <button ng-click="updateInfo()">Submit Changes</button>
                 </div>
             </md-content>
         </md-tab>

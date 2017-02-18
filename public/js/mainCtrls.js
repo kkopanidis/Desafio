@@ -4,8 +4,19 @@
 var module = angular.module('MainCtrls', []);
 
 //The actual function that will act as the controller
-module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc',
-    function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc) {
+module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc', '$interval',
+    function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc, $interval) {
+        function notificationUpdate() {
+            $http.get("/api/users/notif", {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.notifications = response.data;
+            }, function error(error) {
+                console.log("Failed");
+            });
+        }
 
         var activeSendId;
         userSrvc.cookieLog(function (error, response) {
@@ -14,17 +25,12 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
             } else {
                 $scope.name = response.username;
 
+                //update notifications every 2000ms
+                $interval(notificationUpdate, 4000);
+
             }
         });
-        $http.get("/api/users/notif", {
-            headers: {
-                'Authorization': 'Bearer ' + $cookies.get('auth_0')
-            }
-        }).then(function success(response) {
-            $scope.notifications = response.data;
-        }, function error(error) {
-            window.alert("Failed");
-        });
+
 
         //Depending on the url show a different partial on the main.html
         if ($location.url() == "/main") {
