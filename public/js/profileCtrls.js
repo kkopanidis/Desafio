@@ -48,8 +48,19 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
             }).then(function success(response) {
-                if ($routeParams.id)
-                    $scope.own = $routeParams.id === response.data.id;
+                $scope.own = $routeParams.id === response.data.id;
+
+            }, function error(error) {
+
+            });
+        }
+
+        function info(id) {
+            $http.get("/api/users/" + (id === undefined ? "" : id), {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
                 $scope.info = response.data;
 
             }, function error(error) {
@@ -57,9 +68,11 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
             });
         }
 
+
         if ($routeParams.id) {
             own();
             status();
+            info($routeParams.id);
 
             $http.get("/api/des/gaunlet/" + $routeParams.id, {
                 headers: {
@@ -71,8 +84,8 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
 
             });
         } else {
-            own();
             $scope.own = true;
+            info();
 
             $http.get("/api/des/gaunlet/self", {
                 headers: {

@@ -124,34 +124,57 @@ router.get('/connect/:id', passport.authenticate('bearer', {session: false}), fu
         }
     });
 });
+
+function sendUserData(res, user) {
+    if (user.info)
+        res.json({
+            email: user.email,
+            username: user.username,
+            firstname: user.info.firstname,
+            lastname: user.info.lastname,
+            dob: user.dob,
+            denarious: user.info.denarious,
+            id: user._id
+        });
+    else {
+        res.json({
+            email: user.email,
+            username: user.username,
+            dob: user.dob,
+            id: user._id
+        });
+    }
+}
+
 /* GET user info*/
+router.get('/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    if (req.params.id === "notif") {
+        next();
+        return;
+    }
+    User.findById(req.params.id)
+        .exec(function (err, result) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                sendUserData(res, result)
+            }
+        })
+
+});
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
     req.user.populate('info', function (err, result) {
         if (err) {
             res.status(500).send(err);
         } else {
-            if (req.user.info)
-                res.json({
-                    email: req.user.email,
-                    username: req.user.username,
-                    firstname: req.user.info.firstname,
-                    lastname: req.user.info.lastname,
-                    dob: req.user.dob,
-                    denarious: req.user.info.denarious,
-                    id: req.user._id
-                });
-            else {
-                res.json({
-                    email: req.user.email,
-                    username: req.user.username,
-                    dob: req.user.dob,
-                    id: req.user._id
-                });
-            }
+            sendUserData(res, req.user)
         }
     });
 
+
 });
+
 /* Update user info*/
 router.post('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
