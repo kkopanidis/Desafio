@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var schedule = require('node-schedule');
+var scheduled = require('./logic/scheduled');
 require('./auth/auth');
 
 var routes = require('./routes/index');
@@ -27,7 +29,7 @@ app.use('/api/des', des);
 app.use('/api/search', search);
 app.use('/api/oauth/token', oauth2.token);
 app.use('/', routes);
-
+schedule.scheduleJob(' */45 * * * *', scheduled.gaunlets);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
