@@ -6,8 +6,6 @@ var profCtrl = angular.module('profCtrl', []);
 //The actual function that will act as the controller
 profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$routeParams',
     function profCtrl($scope, $location, $http, $cookies, $routeParams) {
-
-
         function getFollowers() {
             if ($scope.own || !$routeParams.id) {
                 $http.get("/api/users/connect", {
@@ -99,6 +97,39 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
         }
         getFollowers();
 
+        function ShowFollowersController($scope, $mdDialog) {
+            $http.get("/api/users/connect", {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.data = response.data[0].follower;
+            }, function error(error) {
+                window.alert("Failed");
+            });
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+        }
+
+        $scope.showFollowers = function (ev, id) {
+            $mdDialog.show({
+                controller: ShowFollowersController,
+                templateUrl: 'partials/followers_list.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+        };
 
         $scope.follow = function () {
             $http.post("/api/users/connect/" + $routeParams.id, {}, {

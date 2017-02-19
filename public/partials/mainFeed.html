@@ -8,8 +8,10 @@
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-headline">{{challenge.title}}</span>
+                                        <span class="md-display-3">{{challenge.title}}</span>
                                         <span class="md-subhead">{{challenge.issuer}}</span>
+                                        <span class="md-subhead">{{challenge.type}}</span>
+                                        <span class="md-headline">{{challenge.desc}}</span>
                                     </md-card-title-text>
                                     <md-card-title-media>
                                         <div class="md-media-sm card-media"></div>
@@ -20,8 +22,9 @@
                                     <md-button ng-click="showSendChallenge($event, challenge._id)">Send to...
                                     </md-button>
                                     <span flex></span>
-                                    Liked by:<p id="{{challenge._id}}_count">0</p>
-                                    <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">Like
+
+                                    <md-button id='{{challenge._id}}' ng-click="like(challenge._id)">
+                                        <div id="{{challenge._id}}_count">Like 0</div>
                                     </md-button>
                                     <md-button ng-click="getComments(challenge._id)">Comment</md-button>
                                 </md-card-actions>
