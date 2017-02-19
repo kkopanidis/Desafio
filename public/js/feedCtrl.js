@@ -78,11 +78,11 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
                 if (document.getElementById(id).style.color === "rgb(37, 213, 237)") {
                     document.getElementById(id).style.color = "black";
                     document.getElementById(id + "_count").innerHTML =
-                        (parseInt(document.getElementById(id + "_count").innerHTML) - 1) + "";
+                        "Like (" + (parseInt(document.getElementById(id + "_count").innerHTML.substr(6)) - 1) + ")";
                 } else {
                     document.getElementById(id).style.color = "#25d5ed";
                     document.getElementById(id + "_count").innerHTML =
-                        (parseInt(document.getElementById(id + "_count").innerHTML) + 1) + "";
+                        "Like (" + (parseInt(document.getElementById(id + "_count").innerHTML.substr(6)) + 1) + ")";
                 }
             }, function error(error) {
                 console.log(error)
