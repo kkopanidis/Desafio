@@ -7,7 +7,9 @@ var Comment = require('../models/comment');
 var mongoose = require('mongoose');
 var Gaunlet = require('../models/gauntlet');
 var GaunletStatus = require('../models/gauntletStatus');
+var User = require('../models/user');
 var Notifications = require("../logic/notifications");
+
 //Get this users' challenges
 router.get('/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 

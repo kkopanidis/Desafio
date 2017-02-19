@@ -6,7 +6,9 @@
         </md-button>
     </div>
     <div ng-if="own">
-        <h1>Followers: {{followers}}</h1>
+        <md-button ng-click="showFollowers($event, user._id)">
+            {{followers}} followers
+        </md-button>
     </div>
 
     <md-tabs md-dynamic-height md-border-bottom>

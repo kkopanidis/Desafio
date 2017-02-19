@@ -42,7 +42,8 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
                 }
             }).then(function success(response) {
                 for (var k = 0, p = response.data.length; k < p; k++) {
-                    document.getElementById(response.data[k].challenge + "_count").innerHTML = response.data[k].likes;
+                    document.getElementById(response.data[k].challenge + "_count")
+                        .innerHTML = "Like (" + response.data[k].likes + ")";
                 }
             }, function error(error) {
                 window.alert(error)
