@@ -41,8 +41,16 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
             }).then(function success(response) {
+                var id;
                 for (var k = 0, p = response.data.length; k < p; k++) {
-                    document.getElementById(response.data[k].challenge + "_count").innerHTML = response.data[k].likes;
+
+                    if (response.data[k].challenge instanceof Array) {
+                        id = response.data[k].challenge[0];
+                    }
+                    else {
+                        id = response.data[k].challenge;
+                    }
+                    document.getElementById(id + "_count").innerHTML = response.data[k].likes;
                 }
             }, function error(error) {
                 window.alert(error)
@@ -69,8 +77,12 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
             }).then(function success(response) {
                 if (document.getElementById(id).style.color === "rgb(37, 213, 237)") {
                     document.getElementById(id).style.color = "black";
+                    document.getElementById(id + "_count").innerHTML =
+                        (parseInt(document.getElementById(id + "_count").innerHTML) - 1) + "";
                 } else {
                     document.getElementById(id).style.color = "#25d5ed";
+                    document.getElementById(id + "_count").innerHTML =
+                        (parseInt(document.getElementById(id + "_count").innerHTML) + 1) + "";
                 }
             }, function error(error) {
                 console.log(error)
