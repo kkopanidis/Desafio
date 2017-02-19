@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
     gaunlet = require('../models/gauntlet'),
     moment = require('moment'),
+    notifications = require("../logic/notifications"),
     gaunletStatus = require('../models/gauntletStatus');
 
 //sync gauntlet state
@@ -19,8 +20,13 @@ function gaunletSync() {
                     if (date > element.deadline) {
                         element.status.status = "FAILED";
                         element.save(function (err) {
-                            if (err)
-                                console.log("failed to update gauntlet")
+                            if (err) {
+                                console.log("failed to update gauntlet");
+                            }
+                            else {
+                                notifications.sendNotification(element.challengee,
+                                    "You failed to complete challenge with id: " + element.challenge);
+                            }
                         })
                     }
                 }
