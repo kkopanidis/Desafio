@@ -50,7 +50,7 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
                     else {
                         id = response.data[k].challenge;
                     }
-                    document.getElementById(id + "_count").innerHTML = response.data[k].likes;
+                    document.getElementById(id + "_count").innerHTML = "Like (" + response.data[k].likes + ")";
                 }
             }, function error(error) {
                 window.alert(error)
