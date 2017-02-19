@@ -4,8 +4,8 @@
 var profCtrl = angular.module('profCtrl', []);
 
 //The actual function that will act as the controller
-profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$routeParams',
-    function profCtrl($scope, $location, $http, $cookies, $routeParams) {
+profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$routeParams', '$mdDialog',
+    function profCtrl($scope, $location, $http, $cookies, $routeParams, $mdDialog) {
         function getFollowers() {
             if ($scope.own || !$routeParams.id) {
                 $http.get("/api/users/connect", {
