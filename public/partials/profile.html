@@ -31,7 +31,7 @@
                                 <md-card-title>
                                     <md-card-title-text>
                                         <span class="md-headline">{{challenge.challenge.title}}</span>
-                                        <span class="md-subhead">To: {{challenge.challengee.username}}
+                                        <span class="md-subhead">
                                             From: {{challenge.challenger.username}}</span>
 
                                     </md-card-title-text>
@@ -40,8 +40,14 @@
                                     </md-card-title-media>
                                 </md-card-title>
                                 <md-card-actions layout="row" layout-align="end center">
-                                    <md-button>Like</md-button>
-                                    <md-button>Comment</md-button>
+                                    <div ng-if="challenge.status.status && challenge.status.status === 'PENDING'">
+                                        <md-button ng-click="answer(challenge._id,'reject')">Reject</md-button>
+                                        <md-button ng-click="answer(challenge._id,'accept')">Accept</md-button>
+                                    </div>
+                                    <md-button
+                                            ng-if="challenge.status.status && challenge.status.status === 'ACCEPTED'">
+                                        Complete
+                                    </md-button>
                                 </md-card-actions>
                             </md-card>
                         </li>

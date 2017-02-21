@@ -95,6 +95,19 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
 
             });
         }
+
+        $scope.answer = function (id, answer) {
+            $http.post("/api/des/gaunlet/" + id, {action: answer}, {
+                headers: {
+                    'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                }
+            }).then(function success(response) {
+                $scope.challenge.status.status = null
+            }, function error(error) {
+                window.alert("Error!");
+            });
+        };
+
         getFollowers();
 
         function ShowFollowersController($scope, $mdDialog) {

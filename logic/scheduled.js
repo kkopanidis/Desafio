@@ -1,10 +1,10 @@
 "use strict";
 
 var mongoose = require('mongoose'),
+    gaunletStatus = require('../models/gauntletStatus'),
     gaunlet = require('../models/gauntlet'),
     moment = require('moment'),
-    notifications = require("../logic/notifications"),
-    gaunletStatus = require('../models/gauntletStatus');
+    notifications = require("../logic/notifications");
 
 //sync gauntlet state
 function gaunletSync() {
@@ -14,7 +14,7 @@ function gaunletSync() {
         .exec(function (err, result) {
             result.forEach(function (element) {
                 //if the gauntlet has been accepted
-                if (element.status.status === "ACCEPTED") {
+                if (element.status && element.status.status === "ACCEPTED") {
                     var date = new Date(moment().utc().format());
                     //if the deadline has passed then the gauntlet has failed
                     if (date > element.deadline) {

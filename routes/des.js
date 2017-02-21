@@ -1,27 +1,30 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var Challenge = require('../models/challenge');
-var Like = require('../models/like');
-var Comment = require('../models/comment');
-var mongoose = require('mongoose');
-var Gaunlet = require('../models/gauntlet');
-var GaunletStatus = require('../models/gauntletStatus');
-var User = require('../models/user');
-var Notifications = require("../logic/notifications");
+const express = require('express'),
+    router = express.Router(),
+    passport = require('passport'),
+    Challenge = require('../models/challenge'),
+    Like = require('../models/like'),
+    Comment = require('../models/comment'),
+    mongoose = require('mongoose'),
+    Gaunlet = require('../models/gauntlet'),
+    GaunletStatus = require('../models/gauntletStatus'),
+    User = require('../models/user'),
+    Notifications = require("../logic/notifications"),
+    Promise = require('bluebird');
 
 //Get this users' challenges
 router.get('/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Challenge.find({})
         .where('issuer').equals(req.user._id)
-        .exec(function (err, result) {
-            if (err || !result) {
-                res.status(500).send("Something went wrong");
+        .exec()
+        .then(function (result) {
+            if (!result) {
+                throw "Nothing found";
             } else {
                 res.status(200).send(result);
             }
         })
+        .catch(next)
 });
 
 //Get all challenges -- to be changed to show challenges of people the user follows (and maybe global ones)
@@ -43,19 +46,21 @@ router.get('/comments/:id', passport.authenticate('bearer', {session: false}), f
 
     Comment.find({'on.doc': req.params.id})
         .populate('user', 'username')
-        .exec(function (err, result) {
-            if (err || !result) {
-                res.status(500).send("Something went wrong");
+        .exec()
+        .then(function (result) {
+            if (!result) {
+                throw "Nothing found";
             } else {
                 res.status(200).send(result);
             }
         })
+        .catch(next);
 });
 
 //Get all challenges -- to be changed to show challenges of people the user follows (and maybe global ones)
 router.post('/comments/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
-    var com = new Comment({
+    const com = new Comment({
         user: req.user,
         actual: req.body.comment
     });
@@ -92,27 +97,82 @@ router.post('/gaunlet', passport.authenticate('bearer', {session: false}), funct
 
     if (req.body[0] === undefined)
         res.status(500).send("Error");
-    var challengees = req.body[0], fail;
-    for (var i = 0, j = req.body[0].length; i < j; i++) {
-        new Gaunlet({
-            challenger: req.user,
-            challengee: challengees[i],
-            challenge: req.body[1],
-            status: new GaunletStatus()
-        }).save(function (err,result) {
-            //Should we stop?
-            if (err)
-                fail = 1;
-            else {
-                Notifications.sendNotification(result.challengee, "You have been challenged by: " + req.user.username +
-                    " check your profile!")
-            }
-        });
+    const challengees = req.body[0];
+    let fail;
+    for (let i = 0, j = req.body[0].length; i < j; i++) {
+        new GaunletStatus()
+            .save()
+            .then(function (status) {
+                return new Gaunlet({
+                    challenger: req.user,
+                    challengee: challengees[i],
+                    challenge: req.body[1],
+                    status: status
+                }).save();
+            })
+            .then(function (item) {
+                Notifications.sendNotification(result.challengee,
+                    "You have been challenged by: " + req.user.username + " check your profile!")
+            })
+            .catch(function (err) {
+                //what do we do on error?
+                //do we stop?
+            })
+
     }
 
     res.status(200).send("Challenge Created");
 
 
+});
+
+
+//Complete gauntlet
+router.post('/gaunlet/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
+    let action = req.body.action;
+    Gaunlet.findById(req.params.id)
+        .where('challengee').eq(req.user)
+        .populate('status')
+        .exec()
+        .then(function (result) {
+            if (result) {
+                switch (action) {
+                    case 'accept':
+                        if (result.status.status === 'PENDING') {
+                            result.status.status = 'ACCEPTED';
+                            return result.status.save();
+                        } else {
+                            throw "Something went wrong";
+                        }
+                        break;
+                    case 'reject':
+                        if (result.status.status === 'PENDING') {
+
+                            result.status.status = 'REJECTED';
+                            return result.status.save();
+                        } else {
+                            throw "Something went wrong";
+                        }
+                        break;
+                    case 'complete':
+                        if (result.status.status === 'ACCEPTED') {
+                            result.status.status = 'REVIEW';
+                            return result.status.save();
+                        } else {
+                            throw "Something went wrong";
+                        }
+                        break;
+                }
+            } else {
+                throw "Something went wrong";
+            }
+        })
+        .then(function (result) {
+            res.status(200).send("OK");
+
+        })
+        .catch(next);
 });
 
 //Get gaunlets in general
@@ -122,13 +182,16 @@ router.get('/gaunlet', passport.authenticate('bearer', {session: false}), functi
         .populate('challenge', 'title')
         .populate('challenger', 'username')
         .populate('challengee', 'username')
-        .exec(function (err, result) {
-            if (err || !result) {
-                res.status(500).send("Something went wrong");
+        .populate('status')
+        .exec()
+        .then(function (result) {
+            if (!result) {
+                throw "Nothing found";
             } else {
                 res.status(200).send(result);
             }
-        });
+        })
+        .catch(next);
 
 });
 
@@ -140,6 +203,7 @@ router.get('/gaunlet/self', passport.authenticate('bearer', {session: false}), f
         .populate('challenge', 'title')
         .populate('challenger', 'username')
         .populate('challengee', 'username')
+        .populate('status')
         .exec(function (err, result) {
             if (err || !result) {
                 res.status(500).send("Something went wrong");
@@ -172,38 +236,30 @@ router.post('/like/:id', passport.authenticate('bearer', {session: false}), func
     Like.findOne()
         .where('user').equals(req.user._id)
         .where('challenge').equals(req.params.id)
-        .exec(function (err, result) {
-            if (err) {
-                res.status(500).json({error: err});
-            } else if (result) {
-                result.remove(function (err) {
-                    if (err) {
-                        res.status(500).json({error: err});
-                    } else {
-                        res.status(200).json({info: "success"});
-                    }
+        .exec()
+        .then(function (result) {
+            if (result) {
+                return result.remove(function (err) {
+
                 });
             } else {
-                new Like({
+                return new Like({
                     challenge: req.params.id,
                     user: req.user._id
-                }).save(function (err, result) {
-                    if (err || !result) {
-                        res.status(500).json({error: err});
-                    } else {
-                        res.status(200).json({info: "success"});
-                    }
-                });
+                }).save();
             }
-
-        });
+        })
+        .then(function (item) {
+            res.status(200).json({info: "success"});
+        })
+        .catch(next);
 
 });
 
 
 router.post('/likes/user', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
-    var array = req.body.challenges;
+    const array = req.body.challenges;
     Like.find({}, 'challenge')
         .where('challenge').in(array)
         .where('user').equals(req.user._id)
@@ -220,8 +276,10 @@ router.post('/likes/user', passport.authenticate('bearer', {session: false}), fu
 
 router.post('/likes/all', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
-    var array = [];
-    for (var i = 0, j = req.body.challenges.length; i < j; i++) {
+    const array = [];
+    let i = 0;
+    const j = req.body.challenges.length;
+    for (; i < j; i++) {
         array.push(mongoose.Types.ObjectId(req.body.challenges[i]));
     }
 

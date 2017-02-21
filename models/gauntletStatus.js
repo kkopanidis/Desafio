@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     GauntletStatus = new Schema({
             status: {
                 type: String,
-                enum: ['ACCEPTED', 'REJECTED', 'COMPLETED', 'FAILED', 'PENDING'],
+                enum: ['ACCEPTED', 'REJECTED', 'COMPLETED', 'FAILED', 'PENDING', 'REVIEW'],
                 default: 'PENDING'
             },
             acc_rej_Date: { //date the challengee accepted or rejected the challenge

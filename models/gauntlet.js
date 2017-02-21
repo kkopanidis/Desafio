@@ -27,7 +27,7 @@ var mongoose = require('mongoose'),
             },
             status: {
                 type: Schema.Types.ObjectId,
-                ref: 'gauntletStatus'
+                ref: 'GauntletStatus'
             }
         },
         {

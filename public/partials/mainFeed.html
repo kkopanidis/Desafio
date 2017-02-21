@@ -65,13 +65,13 @@
         </md-tab>
         <md-tab label="Gaunlets">
             <md-content class="md-padding">
-                <div flex-xs flex-gt-xs="100" layout="column" >
+                <div flex-xs flex-gt-xs="100" layout="column">
                     <ul style="list-style-type:none">
                         <li ng-repeat="challenge in gaunletflow">
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-headline">{{challenge.challenge.title}}</span>
+                                        <span class="md-headline">{{challenge.challenge.title}} Status: {{challenge.status.status}}</span>
                                         <span class="md-subhead">To: {{challenge.challengee.username}}
                                             From: {{challenge.challenger.username}}</span>
                                     </md-card-title-text>
@@ -124,13 +124,32 @@
                 </div>
             </md-content>
         </md-tab>
-        <md-tab label="three">
+        <md-tab label="judge">
             <md-content class="md-padding">
-                <h1 class="md-display-2">Tab Three</h1>
-                <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere
-                    molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit
-                    erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac
-                    est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                <div flex-xs flex-gt-xs="100" layout="column">
+                    <ul style="list-style-type:none">
+                        <li ng-repeat="gauntlet in completeflow">
+                            <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
+                                <md-card-title>
+                                    <md-card-title-text>
+                                        <span class="md-display-3">{{challenge.title}}</span>
+                                        <span class="md-subhead">{{challenge.issuer}}</span>
+                                        <span class="md-subhead">{{challenge.type}}</span>
+                                        <span class="md-headline">{{challenge.desc}}</span>
+                                    </md-card-title-text>
+                                    <md-card-title-media>
+                                        <div class="md-media-sm card-media"></div>
+                                    </md-card-title-media>
+                                </md-card-title>
+
+                                <md-card-actions layout="row" layout-align="end center">
+                                    <md-button ng-click="showSendChallenge($event, challenge._id)">Review
+                                    </md-button>
+                                </md-card-actions>
+                            </md-card>
+                        </li>
+                    </ul>
+                </div>
             </md-content>
         </md-tab>
     </md-tabs>

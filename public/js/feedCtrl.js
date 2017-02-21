@@ -3,6 +3,10 @@
 //Define the controller module, assign its dependencies, assign the function.
 var feedCtrl = angular.module('feedCtrl', []);
 
+
+
+
+
 //The actual function that will act as the controller
 feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
     function feedCtrl($scope, $location, $http, $cookies) {
@@ -16,15 +20,7 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
 
         });
 
-        $http.get("/api/des/flow", {
-            headers: {
-                'Authorization': 'Bearer ' + $cookies.get('auth_0')
-            }
-        }).then(function success(response) {
-            $scope.challengeflow = response.data;
-            var data = [];
-            for (var i = 0, j = response.data.length; i < j; i++)
-                data.push(response.data[i]._id);
+        function getOwnLikes(data) {
             $http.post("/api/des/likes/user", {challenges: data}, {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
@@ -36,13 +32,16 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
             }, function error(error) {
                 window.alert(error)
             });
+        }
+
+        function getLikes(data) {
             $http.post("/api/des/likes/all", {challenges: data}, {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
             }).then(function success(response) {
-                var id;
-                for (var k = 0, p = response.data.length; k < p; k++) {
+                let id;
+                for (let k = 0, p = response.data.length; k < p; k++) {
 
                     if (response.data[k].challenge instanceof Array) {
                         id = response.data[k].challenge[0];
@@ -55,9 +54,25 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
             }, function error(error) {
                 window.alert(error)
             });
+        }
+
+        $http.get("/api/des/flow", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.challengeflow = response.data;
+            let data = [], i = 0, j = response.data.length;
+
+            for (; i < j; i++)
+                data.push(response.data[i]._id);
+            getOwnLikes(data);
+            getLikes(data);
+
         }, function error(error) {
 
         });
+
         $http.get("/api/des/gaunlet", {
             headers: {
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
