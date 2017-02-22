@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     gaunletStatus = require('../models/gauntletStatus'),
     gaunlet = require('../models/gauntlet'),
     moment = require('moment'),
-    notifications = require("../logic/notifications");
+    gauntlets = require("../logic/gauntlets");
 
 //sync gauntlet state
 function gaunletSync() {
@@ -18,16 +18,7 @@ function gaunletSync() {
                     var date = new Date(moment().utc().format());
                     //if the deadline has passed then the gauntlet has failed
                     if (date > element.deadline) {
-                        element.status.status = "FAILED";
-                        element.save(function (err) {
-                            if (err) {
-                                console.log("failed to update gauntlet");
-                            }
-                            else {
-                                notifications.sendNotification(element.challengee,
-                                    "You failed to complete challenge with id: " + element.challenge);
-                            }
-                        })
+                        gauntlets.fail(element._id);
                     }
                 }
             });
