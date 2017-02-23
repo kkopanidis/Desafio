@@ -1,0 +1,32 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Gauntlet Completion Review</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/ic_clear_white_48px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content layout="column">
+            <div class="md-dialog-content">
+                Challenge: {{reviewed.challenge.title}}
+                User: {{reviewed.challengee.username}}
+                Proof:
+                <img src="{{reviewed.proof}}">
+            </div>
+
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button ng-click="answer('revreject')">
+                REJECT
+            </md-button>
+            <md-button ng-click="answer('revaccept')">
+                ACCEPT
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

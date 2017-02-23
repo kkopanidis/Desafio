@@ -4,9 +4,6 @@
 var feedCtrl = angular.module('feedCtrl', []);
 
 
-
-
-
 //The actual function that will act as the controller
 feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
     function feedCtrl($scope, $location, $http, $cookies) {
@@ -16,6 +13,15 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
             }
         }).then(function success(response) {
             $scope.challenges = response.data
+        }, function error(error) {
+
+        });
+        $http.get("/api/des/gaunlet/review", {
+            headers: {
+                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+            }
+        }).then(function success(response) {
+            $scope.reviewFlow = response.data
         }, function error(error) {
 
         });

@@ -30,7 +30,7 @@
                             <md-card md-theme="{{ showDarkTheme ? 'dark-purple' : 'default' }}" md-theme-watch>
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-headline">{{challenge.challenge.title}}</span>
+                                        <span class="md-headline">{{challenge.challenge.title}} Status: {{challenge.status.status}}</span>
                                         <span class="md-subhead">
                                             From: {{challenge.challenger.username}}</span>
 
@@ -45,7 +45,8 @@
                                         <md-button ng-click="answer(challenge._id,'accept')">Accept</md-button>
                                     </div>
                                     <md-button
-                                            ng-if="challenge.status.status && challenge.status.status === 'ACCEPTED'">
+                                            ng-if="challenge.status.status && challenge.status.status === 'ACCEPTED'"
+                                            ng-click="showCompleteGauntlet($event, challenge._id)">
                                         Complete
                                     </md-button>
                                 </md-card-actions>

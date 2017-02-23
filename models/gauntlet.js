@@ -25,6 +25,9 @@ var mongoose = require('mongoose'),
             deadline: {
                 type: Date
             },
+            proof: {
+                type: Buffer
+            },
             status: {
                 type: Schema.Types.ObjectId,
                 ref: 'GauntletStatus'

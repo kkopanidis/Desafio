@@ -9,6 +9,7 @@ const express = require('express'),
     GaunletStatus = require('../models/gauntletStatus'),
     User = require('../models/user'),
     Notifications = require("../logic/notifications"),
+    GauntletUtil = require("../logic/gauntlets"),
     Promise = require('bluebird');
 
 //Get this users' challenges
@@ -132,7 +133,6 @@ router.post('/gaunlet/:id', passport.authenticate('bearer', {session: false}), f
 
     let action = req.body.action;
     Gaunlet.findById(req.params.id)
-        .where('challengee').eq(req.user)
         .populate('status')
         .exec()
         .then(function (result) {
@@ -158,7 +158,22 @@ router.post('/gaunlet/:id', passport.authenticate('bearer', {session: false}), f
                     case 'complete':
                         if (result.status.status === 'ACCEPTED') {
                             result.status.status = 'REVIEW';
+                            result.proof = new Buffer(req.body.proof, "Base64");
                             return result.status.save();
+                        } else {
+                            throw "Something went wrong";
+                        }
+                        break;
+                    case 'revaccept':
+                        if (result.status.status === 'REVIEW' && result.challenger === req.params.user._id) {
+                            GauntletUtil.success(result._id);
+                        } else {
+                            throw "Something went wrong";
+                        }
+                        break;
+                    case 'revreject':
+                        if (result.status.status === 'REVIEW' && result.challenger === req.params.user._id) {
+                            GauntletUtil.fail(result._id);
                         } else {
                             throw "Something went wrong";
                         }
@@ -213,14 +228,15 @@ router.get('/gaunlet/self', passport.authenticate('bearer', {session: false}), f
         });
 
 });
-//Get gaunlets thrown at me
-router.get('/gaunlet/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+//Get gaunlets pending review
+router.get('/gaunlet/review', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Gaunlet.find({})
-        .where('challengee').equals(req.params.id)
+        .where('challenger').equals(req.user)
         .populate('challenge', 'title')
         .populate('challenger', 'username')
         .populate('challengee', 'username')
+        .populate('status')
         .exec(function (err, result) {
             if (err || !result) {
                 res.status(500).send("Something went wrong");

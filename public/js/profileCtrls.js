@@ -166,6 +166,64 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
             }, function error(error) {
                 window.alert("Failed");
             });
+        };
+        var gauntletID;
+
+        $scope.showCompleteGauntlet = function (ev, id) {
+            gauntletID = id;
+            $mdDialog.show({
+                controller: CompleteDialogController,
+                templateUrl: 'partials/complete_diag.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+        };
+
+        function CompleteDialogController($scope, $mdDialog) {
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+            $scope.answer = function (answer) {
+                let input = document.getElementById("proof_input");
+                let self = this;
+                if (input.files && input.files[0]) {
+                    let reader = new FileReader();
+
+                    reader.onloadend = function (e) {
+                        //Send the checked users and the challenge id to the server
+                        $http.post("/api/des/gaunlet/" + gauntletID, {
+                            action: answer,
+                            proof: e.target.result
+                        }, {
+                            headers: {
+                                'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                            }
+                        }).then(function success(response) {
+                            window.alert("Success");
+                        }, function error(error) {
+                            window.alert("Failed");
+                        });
+                        $mdDialog.hide();
+
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    window.alert("You need to provide proof!");
+                }
+
+
+            };
         }
 
     }]

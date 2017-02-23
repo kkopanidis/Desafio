@@ -13,7 +13,8 @@ var mongoose = require('mongoose'),
             type: String
         },
         denarius: {
-            type: Number
+            type: Number,
+            Default: 0
         },
         photo: {
             type: String
