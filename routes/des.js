@@ -159,20 +159,23 @@ router.post('/gaunlet/:id', passport.authenticate('bearer', {session: false}), f
                         if (result.status.status === 'ACCEPTED') {
                             result.status.status = 'REVIEW';
                             result.proof = new Buffer(req.body.proof, "Base64");
-                            return result.status.save();
+                            result.status.save();
+                            return result.save();
                         } else {
                             throw "Something went wrong";
                         }
                         break;
                     case 'revaccept':
-                        if (result.status.status === 'REVIEW' && result.challenger === req.params.user._id) {
+                        if (result.status.status === 'REVIEW' &&
+                            mongoose.Types.ObjectId(result.challenger).toString()
+                            === mongoose.Types.ObjectId(req.user._id).toString()) {
                             GauntletUtil.success(result._id);
                         } else {
                             throw "Something went wrong";
                         }
                         break;
                     case 'revreject':
-                        if (result.status.status === 'REVIEW' && result.challenger === req.params.user._id) {
+                        if (result.status.status === 'REVIEW' && result.challenger === req.user._id) {
                             GauntletUtil.fail(result._id);
                         } else {
                             throw "Something went wrong";
@@ -241,7 +244,19 @@ router.get('/gaunlet/review', passport.authenticate('bearer', {session: false}),
             if (err || !result) {
                 res.status(500).send("Something went wrong");
             } else {
-                res.status(200).send(result);
+
+                let send = [];
+                let i = 0, j = result.length;
+                for (; i < j; i++) {
+                    if ((result[i].status == undefined || result[i].status.status == undefined) ||
+                        result[i].status.status != "REVIEW") {
+
+                        continue;
+                    }
+                    result[i]._doc.decodedProof = result[i].proof.toString('base64')
+                    send.push(result[i]);
+                }
+                res.status(200).send(send);
             }
         });
 

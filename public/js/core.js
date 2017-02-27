@@ -5,8 +5,8 @@ var desafio = angular.module('desafio', ['ngRoute', 'indexCtrls', 'MainCtrls', '
 
 //All will be changed
 desafio.config(['$routeProvider', '$locationProvider',
-    '$mdThemingProvider', function ($routeProvider,
-                                    $locationProvider, $mdThemingProvider) {
+    '$mdThemingProvider','$compileProvider', function ($routeProvider,
+                                    $locationProvider, $mdThemingProvider,$compileProvider) {
         $mdThemingProvider.definePalette('amazingPaletteName', {
             '50': '#30292F',
             '100': '#30292F',
@@ -29,6 +29,7 @@ desafio.config(['$routeProvider', '$locationProvider',
                 '200', '300', '400', 'A100'],
             'contrastLightColors': undefined    // could also specify this if default was 'dark'
         });
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
         $mdThemingProvider.definePalette('accentPalette', {
             '50': '#F1A208',
             '100': '#F1A208',
