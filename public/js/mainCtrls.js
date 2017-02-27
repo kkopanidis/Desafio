@@ -110,6 +110,22 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $scope.status = 'You cancelled the dialog.';
             });
         };
+        let reviewed;
+        $scope.showReviewGauntlet = function (ev, gauntlet) {
+            reviewed = gauntlet;
+            $mdDialog.show({
+                controller: ReviewGauntletController,
+                templateUrl: 'partials/reviewDialog.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+        };
 
 
         function DialogController($scope, $mdDialog) {
@@ -174,6 +190,19 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $mdDialog.hide();
 
             };
+        }
+
+        function ReviewGauntletController($scope, $mdDialog) {
+            $scope.reviewed = reviewed;
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+
         }
 
 

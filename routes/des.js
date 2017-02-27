@@ -236,7 +236,7 @@ router.get('/gaunlet/review', passport.authenticate('bearer', {session: false}),
         .populate('challenge', 'title')
         .populate('challenger', 'username')
         .populate('challengee', 'username')
-        .populate('status')
+        .populate('status', null, {status: {$eq: "REVIEW"}})
         .exec(function (err, result) {
             if (err || !result) {
                 res.status(500).send("Something went wrong");
