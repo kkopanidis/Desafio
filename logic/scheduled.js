@@ -12,6 +12,8 @@ function gaunletSync() {
     gaunlet.find({})
         .populate('status')
         .exec(function (err, result) {
+            if(!result)
+                return;
             result.forEach(function (element) {
                 //if the gauntlet has been accepted
                 if (element.status && element.status.status === "ACCEPTED") {
