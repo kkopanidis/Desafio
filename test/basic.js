@@ -113,9 +113,9 @@ describe('challenge flow', function () {
                 done();
             });
     });
-    it('should create a new challenge on / POST', function (done) {
+    it('should create a new challenge on /des POST', function (done) {
         chai.request(server)
-            .post('/')
+            .post('api/des')
             .send({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food', 'issuer': userid})
             .end(function (err, res) {
                 res.should.have.status(200);
@@ -138,7 +138,7 @@ describe('challenge flow', function () {
     // TODO
     it('should create a new gauntlent on /gaunlet POST', function (done) {
         chai.request(server)
-            .post('/gaunlet')
+            .post('api/gaunlet')
             .send({})
             .end(function (err, res) {
                 res.should.have.status(200);
