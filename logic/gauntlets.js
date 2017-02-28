@@ -15,6 +15,7 @@ function complete(gauntletID) {
         .exec()
         .then(function (res) {
             res.status.status = "COMPLETED";
+            res.status.save();
             return res.save();
         })
         .then(function (item) {

@@ -204,7 +204,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
                         //Send the checked users and the challenge id to the server
                         $http.post("/api/des/gaunlet/" + gauntletID, {
                             action: answer,
-                            proof: e.target.result
+                            proof: (e.target.result.split(','))[1]
                         }, {
                             headers: {
                                 'Authorization': 'Bearer ' + $cookies.get('auth_0')

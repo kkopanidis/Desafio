@@ -6,6 +6,8 @@ var module = angular.module('MainCtrls', []);
 //The actual function that will act as the controller
 module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdDialog', 'userSrvc', '$interval',
     function indexCtrl($scope, $location, $http, $cookies, $mdDialog, userSrvc, $interval) {
+        let prom;
+
         function notificationUpdate() {
             $http.get("/api/users/notif", {
                 headers: {
@@ -15,6 +17,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $scope.notifications = response.data;
             }, function error(error) {
                 console.log("Failed");
+                $interval.cancel(prom);
             });
         }
 
@@ -26,7 +29,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $scope.name = response.username;
 
                 //update notifications every 2000ms
-                $interval(notificationUpdate, 4000);
+                prom = $interval(notificationUpdate, 4000);
 
             }
         });
@@ -110,6 +113,22 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $scope.status = 'You cancelled the dialog.';
             });
         };
+        let reviewed;
+        $scope.showReviewGauntlet = function (ev, gauntlet) {
+            reviewed = gauntlet;
+            $mdDialog.show({
+                controller: ReviewGauntletController,
+                templateUrl: 'partials/reviewDialog.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            }).then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+        };
 
 
         function DialogController($scope, $mdDialog) {
@@ -174,6 +193,34 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                 $mdDialog.hide();
 
             };
+        }
+
+        function ReviewGauntletController($scope, $mdDialog) {
+            $scope.reviewed = reviewed;
+            $scope.hide = function () {
+                $mdDialog.hide();
+            };
+
+            $scope.cancel = function () {
+                $mdDialog.cancel();
+            };
+
+            $scope.answer = function (answer) {
+                //Send the checked users and the challenge id to the server
+                $http.post("/api/des/gaunlet/" + $scope.reviewed._id, {
+                    action: answer
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + $cookies.get('auth_0')
+                    }
+                }).then(function success(response) {
+                    window.alert("Success");
+                }, function error(error) {
+                    window.alert("Failed");
+                });
+                $mdDialog.hide();
+            }
+
         }
 
 

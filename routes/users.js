@@ -32,7 +32,11 @@ router.post('/logout', passport.authenticate('bearer', {session: false}), functi
     Token.findOne({userId: req.user.userId}, function (err, token) {
         if (err) {
             res.status(500).send(err);
-        } else {
+        }
+        else if (!token) {
+            res.status(200).send();
+        }
+        else {
             token.remove();
             TokenRef.findOne({userId: req.user.userId}, function (err, tokenRef) {
                 if (err || !tokenRef) {

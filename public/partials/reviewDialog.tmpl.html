@@ -13,9 +13,11 @@
         <md-dialog-content layout="column">
             <div class="md-dialog-content">
                 Challenge: {{reviewed.challenge.title}}
+                <br>
                 User: {{reviewed.challengee.username}}
+                <br>
                 Proof:
-                <img src="{{reviewed.proof}}">
+                <img ng-src="data:image/jpeg;base64,{{reviewed.decodedProof}}">
             </div>
 
         </md-dialog-content>
