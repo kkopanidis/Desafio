@@ -11,18 +11,27 @@
         repo: "{{ project_repo }}"
         dest: "{{ install_root }}/{{ project_name }}"
         accept_hostkey: yes
-      notify:
-      - restart gunicorn
-      
-    - name: install python packages
-      pip:
-        requirements: "{{ install_root }}/{{ project_name }}/requirements.txt"
-        executable: pip3
-      notify:
 
     - name: copy nginx config
       template: src=files/nginx.j2 dest=/etc/nginx/sites-enabled/{{ project_name }}.conf
       notify:
       - restart nginx
+
+    - name: build the image
+        command: docker build -t desafio:latest
+
+    - name: run desafio in a docker container
+      docker:
+        name: desafio
+        image: "desafio:latest"
+        state: reloaded
+        pull: always
+        ports: "80:3000"
+        detatch: True
+        use_tls: encrypt
+
+    handlers:
+      - name: restart nginx
+        service: name=nginx state=restarted
 
 # vim:ft=ansible:
