@@ -30,8 +30,8 @@ function validate(email, callback) {
         return;
     }
 
-    callback(null, {success: true});
-    //startDNSQueries(email, callback);
+    //callback(null, {success: true});
+    startDNSQueries(email, callback);
 
 }
 

@@ -52,9 +52,11 @@ describe('Register', function () {
                 done();
             });
     });
+
 });
 
 describe('Login and sessions', function () {
+
     it('should create user session for valid user', function (done) {
         chai.request(server)
             .post('/api/oauth/token')
@@ -80,6 +82,57 @@ describe('Login and sessions', function () {
                 done();
             });
     });
+
+    it('should fail due to wrong pass', function (done) {
+        chai.request(server)
+            .post('/api/oauth/token')
+            .set('Accept', 'application/json')
+            .send({
+                "grant_type": "password",
+                "client_id": "Axxh45u4bdajGDshjk21n",
+                "client_secret": "d13e~223~!!@$5dasd",
+                "username": "utest@test.com",
+                "password": "taf"
+            })
+            .end(function (err, res) {
+                res.should.have.status(403);
+                res.should.be.json;
+                done();
+            });
+    });
+
+    it('should fail due to wrong client tokens', function (done) {
+        chai.request(server)
+            .post('/api/oauth/token')
+            .set('Accept', 'application/json')
+            .send({
+                "grant_type": "password",
+                "username": "utest@test.com",
+                "password": "test123"
+            })
+            .end(function (err, res) {
+                res.should.have.status(401);
+                done();
+            });
+    });
+
+    it('should fail due to missing grant', function (done) {
+        chai.request(server)
+            .post('/api/oauth/token')
+            .set('Accept', 'application/json')
+            .send({
+                "client_id": "Axxh45u4bdajGDshjk21n",
+                "client_secret": "d13e~223~!!@$5dasd",
+                "username": "utest@test.com",
+                "password": "test123"
+            })
+            .end(function (err, res) {
+                res.should.have.status(501);
+                res.should.be.json;
+                done();
+            });
+    });
+
     it('should get user session for current user', function (done) {
 
         chai.request(server)
@@ -101,44 +154,35 @@ describe('Login and sessions', function () {
 });
 
 describe('challenge flow', function () {
+
     it('should get ALL challenges on /flow GET', function (done) {
         chai.request(server)
-            .get('/flow')
+            .get('/api/des/flow')
+            .set('Authorization', 'Bearer ' + cookies)
             .end(function (err, res) {
                 res.should.have.status(200);
                 res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.should.have.property('data');
-                res.body.data.should.be.a('array');
+                res.body.should.be.a('array');
+
                 done();
             });
     });
+
     it('should create a new challenge on /des POST', function (done) {
         chai.request(server)
-            .post('api/des')
-            .send({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food', 'issuer': userid})
+            .post('/api/des')
+            .set('Authorization', 'Bearer ' + cookies)
+            .send({'name': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
             .end(function (err, res) {
                 res.should.have.status(200);
-                res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.should.have.property('SUCCESS');
-                res.body.SUCCESS.should.be.a('object');
-                res.body.SUCCESS.should.have.property('title');
-                res.body.SUCCESS.should.have.property('desc');
-                res.body.SUCCESS.should.have.property('type');
-                res.body.SUCCESS.should.have.property('issuer');
-                res.body.SUCCESS.should.have.property('_id');
-                res.body.SUCCESS.title.should.equal('testaki');
-                res.body.SUCCESS.desc.should.equal('perigrafh lol');
-                res.body.SUCCESS.type.should.equal('food');
-                res.body.SUCCESS.issuer.should.equal(userid);
                 done();
             });
     });
+
     // TODO
     it('should create a new gauntlent on /gaunlet POST', function (done) {
         chai.request(server)
-            .post('api/gaunlet')
+            .post('/api/des/gaunlet')
             .send({})
             .end(function (err, res) {
                 res.should.have.status(200);
