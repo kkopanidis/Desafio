@@ -42,7 +42,7 @@ var mongoose = require('mongoose'),
         });
 
 User.pre('save', function (doc, next) {
-    valmail(email, function (err) {
+    valmail(this.email, function (err) {
         if (err) {
             next(err);
         } else {
