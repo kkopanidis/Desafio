@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     crypto = require('crypto'),
-
+    valmail = require('../logic/utils/mailValidation'),
     Schema = mongoose.Schema,
 
     User = new Schema({
@@ -41,7 +41,21 @@ var mongoose = require('mongoose'),
             timestamps: true
         });
 
+User.pre('save', function (doc, next) {
+    valmail(email, function (err) {
+        if (err) {
+            next(err);
+        } else {
+            next();
+        }
+    })
+
+
+});
+
+
 User.methods.encryptPassword = function (password) {
+    //Not secure, needs to change to sha256
     return crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha1').toString('hex');
 };
 
