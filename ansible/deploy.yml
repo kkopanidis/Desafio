@@ -23,12 +23,17 @@
     - name: run desafio in a docker container
       docker:
         name: desafio
-        image: "desafio:latest"
+        image:
+        - "desafio:latest"
         state: reloaded
         pull: always
-        ports: "80:3000"
+        ports:
+        - "3000:3000"
         detatch: True
         use_tls: encrypt
+        restart_policy: always
+        links:
+        - "mongodes:mongodb"
 
     handlers:
       - name: restart nginx
