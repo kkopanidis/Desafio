@@ -180,16 +180,13 @@ describe('challenge flow', function () {
     });
 
     // TODO
-    it('should create a new gauntlent on /gaunlet POST', function (done) {
+    it('should fail to create a new gauntlent on /gaunlet POST', function (done) {
         chai.request(server)
             .post('/api/des/gaunlet')
+            .set('Authorization', 'Bearer ' + cookies)
             .send({})
             .end(function (err, res) {
-                res.should.have.status(200);
-                res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.should.have.property('SUCCESS');
-                res.body.SUCCESS.should.be.a('object');
+                res.should.have.status(404);
 
                 done();
             });
