@@ -30,7 +30,8 @@ function validate(email, callback) {
         return;
     }
 
-    startDNSQueries(email, callback);
+    callback(null, {success: true});
+    //startDNSQueries(email, callback);
 
 }
 

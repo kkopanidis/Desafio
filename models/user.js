@@ -41,17 +41,18 @@ var mongoose = require('mongoose'),
             timestamps: true
         });
 
-User.pre('save', function (doc, next) {
-    valmail(this.email, function (err) {
-        if (err) {
-            next(err);
-        } else {
-            next();
-        }
-    })
-
-
-});
+// User.pre('save', function (doc, next) {
+//     valmail(this.email, function (err) {
+//
+//         if (err) {
+//             next(err);
+//         } else {
+//             next(null);
+//         }
+//     })
+//
+//
+// });
 
 
 User.methods.encryptPassword = function (password) {
