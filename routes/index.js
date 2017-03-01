@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
-var path = require('path');
-var Gaunlet = require('../models/gauntlet'),
-    GaunletStatus = require('../models/gauntletStatus');
-var client = require('../models/client');
+const express = require('express'),
+    router = express.Router(),
+    path = require('path'),
+    client = require('../models/client');
+
+
 //send the partial
 router.get('/partial/:name', function (req, res, next) {
     res.sendFile(path.join(__dirname, 'public/partial/' + req.params.name));

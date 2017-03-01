@@ -14,7 +14,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var des = require('./routes/des');
 var search = require('./routes/search');
-var oauth2 = require('./auth/oauth2');
+var oauth2 = require('./routes/oauth');
 
 var app = express();
 app.use(logger('dev'));
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/users', users);
 app.use('/api/des', des);
 app.use('/api/search', search);
-app.use('/api/oauth/token', oauth2.token);
+app.use('/api/oauth', oauth2);
 app.use('/', routes);
 schedule.scheduleJob(' */1 * * * *', scheduled.gaunlets);
 // catch 404 and forward to error handler
