@@ -20,22 +20,31 @@
       file: path={{ install_root }}/{{ project_name }} state=directory
 
     - name: enable ngnix at startup
-          service: name=nginx enabled=yes
+      service: name=nginx enabled=yes
 
     - name: Add Docker repository key
       apt_key:
         id: "58118E89F3A912897C070ADBF76221572C52609D"
-        keyserver: "hkp://ha.pool.sks-keyservers.net:80"
+        keyserver: "hkp://p80.pool.sks-keyservers.net:80"
         state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb https://apt.dockerproject.org/repo ubuntu-xenial main
+        state: present
+
+    - name: Apt update
+      apt:
+        update_cache: yes
 
     - name: print to stdout
       command: echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | tee /etc/apt/sources.list.d/docker.list
-      update_cache: yes
-      state: present
+      #update_cache: yes
+      #state: present
 
     - name: Install docker engine
       apt:
-        pkg: docker engine
+        pkg: docker-engine
         state: installed
 
     - name: Make sure docker is running
@@ -44,52 +53,53 @@
         state: started
 
     - name: add group docker
-      groupadd:
+      group:
         name: docker
         state: present
 
     - name: add user to docker group
       user:
-        name: {{ user }}
+        name: "{{ user }}"
         group: docker
         append: yes
 
-    - systemd:
-      name: docker
-      state: started
-      enabled: True
+    - name: add system process
+      systemd:
+          name: docker
+          state: started
+          enabled: True
+#
+#    - name: reboot server
+#      shell: sleep 2 && shutdown -r now
+#      become: true
+#      async: 1
+#      poll: 0
+#      ignore_errors: true
+#
+#    - name: Wait for restart
+#      local_action:
+#        module: wait_for
+#          host= "{{inventory_hostname}}"
+#          port=22
+#          delay=90
+#          timeout=300
+#        become: false
 
-    - name: reboot server
-      shell: reboot
-      async: 0
-      poll: 0
-
-    - name: data container
-      docker:
-        name: desdata
-        image: busybox
-        state: present
-        volumes:
-        - /data
+#
+#    - name: data container
+#      docker:
+#        name: desdata
+#        image: busybox
+#        state: present
+#        volumes:
+#        - /data
 
     - name: mongo container
-      docker:
-        name: mongodes
-        image: mongo
-        state: started
-        expose:
-        - 27017
-        volumes_from:
-        - desdata
-
-    - name: make sure mongodb is running
-      docker:
-        name: mongodes
-        state: started
+      shell: docker run --name mongo -v /data:/data/db -d mongo:latest
 
     - name: remove default nginx site
       file: path=/etc/nginx/sites-enabled/default state=absent
 
-- include: deploy.yml
+# - include: deploy.yml
 
 # vim:ft=ansible:

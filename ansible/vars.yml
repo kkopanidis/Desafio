@@ -9,7 +9,7 @@ install_root: /srv
 pythonpath: "{{ install_root }}/{{ project_name }}/project_site"
 
 # The git repository URL for the project
-project_repo: git@github.com:kkopanidis/Desafio.git
+project_repo: https://github.com/kkopanidis/Desafio.git
 
 # A private key that has access to the repository URL
 ssh_private_key: ~/.ssh/id_rsa
@@ -49,13 +49,13 @@ user: user
 system_packages:
   - git
   - nginx
-  - npm
-  - nodejs
   - vim
   - python-pip
   - python3-pip
   - python3-dev
-  - apt-transport-https ca-certificate
-  - linux-image-extra-$(uname -r) linux-image-extra-virtual
+  - apt-transport-https
+  - ca-certificates
+  #- linux-image-extra-$(uname -r)
+  #- linux-image-extra-virtual
 
 # vim:ft=ansible:

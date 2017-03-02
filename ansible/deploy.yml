@@ -18,25 +18,13 @@
       - restart nginx
 
     - name: build the image
-        command: docker build -t desafio:latest .
+      command: docker build -t desafio:latest /srv/desafio
 
     - name: run desafio in a docker container
-      docker:
-        name: desafio
-        image:
-        - "desafio:latest"
-        state: reloaded
-        pull: always
-        ports:
-        - "3000:3000"
-        detatch: True
-        use_tls: encrypt
-        restart_policy: always
-        links:
-        - "mongodes:mongodb"
+      command: docker run --name desafio -d -p 3000:3000 --link mongo:mongo --restart=always -d desafio:latest
 
-    handlers:
-      - name: restart nginx
-        service: name=nginx state=restarted
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
 
 # vim:ft=ansible:
