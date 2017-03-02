@@ -18,4 +18,13 @@ var mongoose = require('mongoose'),
             timestamps: true
         });
 
+//You cannot follow yourself
+Connection.pre('save', function (doc, next) {
+    if (this.follower === this.followee) {
+        next();
+    } else {
+        doc();
+    }
+});
+
 module.exports = mongoose.model('Connection', Connection);

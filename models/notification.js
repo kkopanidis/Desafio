@@ -1,8 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
 
-    //Demo implementation
-    //Probably should be more intelligent than this
     Notification = new Schema({
             user: {
                 type: Schema.Types.ObjectId,

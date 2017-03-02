@@ -17,7 +17,7 @@ var mongoose = require('mongoose'),
             Default: 0
         },
         photo: {
-            type: String
+            type: Buffer
         }
     });
 

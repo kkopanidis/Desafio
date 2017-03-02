@@ -5,18 +5,18 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var should = chai.should();
 var user = require('../models/user');
+var challenge = require('../models/challenge');
 var before = require("mocha").before;
 
 chai.use(chaiHttp);
 
-var userid = 0; //logged in user
 var cookies;
 
 //This is a test group named register
 describe('Register', function () {
 
     //This should launch before the tests of this group
-    before(function (done) {
+    beforeEach(function (done) {
         user.findOne({username: 'utest'})
             .exec()
             .then(function (result) {
@@ -28,7 +28,22 @@ describe('Register', function () {
                     //Calls done when it's done
                     done()
                 }
+            });
+    });
 
+    it('should throw an error on register', function (done) {
+        chai.request(server)
+            .post('/api/users/register')
+            .send({
+                "username": "utest",
+                "password": "test123",
+                "conf_password": "test123",
+                // no email provided
+                "dob": "1995-11-25"
+            })
+            .end(function (err, res) {
+                res.should.have.status(404);
+                done();
             });
     });
 
@@ -52,7 +67,6 @@ describe('Register', function () {
                 done();
             });
     });
-
 });
 
 describe('Login and sessions', function () {
@@ -77,8 +91,6 @@ describe('Login and sessions', function () {
                 //Then use it
                 // Save the cookie to use it later to retrieve the session
                 cookies = res.body.access_token;
-                // what id?!
-                // userid = res.body.id; // pws pairnw to active user id?
                 done();
             });
     });
@@ -134,7 +146,6 @@ describe('Login and sessions', function () {
     });
 
     it('should get user session for current user', function (done) {
-
         chai.request(server)
             .get('/api/users/')
             //set the authorization header
@@ -155,6 +166,31 @@ describe('Login and sessions', function () {
 
 describe('challenge flow', function () {
 
+    before(function (done) {
+
+        user.findOne({username: 'utest123'})
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    done();
+                } else {
+                    chai.request(server)
+                        .post('/api/users/register')
+                        .send({
+                            "username": "utest123",
+                            "password": "test1234",
+                            "conf_password": "test1234",
+                            "email": "utest123@test.com",
+                            "dob": "1992-10-26"
+                        })
+                        .end(function (err, res) {
+                            res.should.have.status(200);
+                            done();
+                        });
+                }
+            });
+    });
+
     it('should get ALL challenges on /flow GET', function (done) {
         chai.request(server)
             .get('/api/des/flow')
@@ -163,7 +199,6 @@ describe('challenge flow', function () {
                 res.should.have.status(200);
                 res.should.be.json;
                 res.body.should.be.a('array');
-
                 done();
             });
     });
@@ -179,16 +214,48 @@ describe('challenge flow', function () {
             });
     });
 
-    // TODO
-    it('should fail to create a new gauntlet on /gauntlet POST', function (done) {
+    it('should fail to create a new gauntlent on /gaunlet POST', function (done) {
         chai.request(server)
-            .post('/api/des/gauntlet')
+            .post('/api/des/gaunlet')
             .set('Authorization', 'Bearer ' + cookies)
             .send({})
             .end(function (err, res) {
                 res.should.have.status(404);
-
                 done();
             });
+    });
+
+    it('should create a new gauntlent on /gaunlet POST', function (done) {
+        var challengees = [];
+        user.findOne({
+            "username": "utest123"
+        }).exec()
+            .then(function (res) {
+                if (res) {
+                    challengees.push(res._id);
+                    return challenge.findOne({'title': 'testaki'})
+                        .exec()
+                } else {
+                    throw "No users found";
+                }
+            })
+            .then(function (result) {
+                if (result) {
+                    chai.request(server)
+                        .post('/api/des/gauntlet')
+                        .set('Authorization', 'Bearer ' + cookies)
+                        .send([challengees, result._id])
+                        .end(function (err, res) {
+                            res.should.have.status(200);
+                            done();
+                        });
+                } else {
+                    throw "Nothing found"
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+                done();
+            })
     });
 });
