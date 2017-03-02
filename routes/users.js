@@ -1,15 +1,21 @@
 "use strict";
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var userInfo = require('../models/userInfo');
-var Token = require('../models/accessToken');
-var TokenRef = require('../models/refreshToken');
-var Connect = require('../models/connections');
-var passport = require('passport');
+const express = require('express'),
+    router = express.Router(),
+    User = require('../models/user'),
+    userInfo = require('../models/userInfo'),
+    Token = require('../models/accessToken'),
+    TokenRef = require('../models/refreshToken'),
+    Connect = require('../models/connections'),
+    passport = require('passport');
 
 //Register new user
 router.post('/register', function (req, res, next) {
+
+    if (!req.body.hasOwnProperty("username") || !req.body.hasOwnProperty("email") || !req.body.hasOwnProperty("password") || !req.body.hasOwnProperty("dob")) {
+
+        next();
+        return;
+    }
 
     new User({
         username: req.body.username,
@@ -29,60 +35,65 @@ router.post('/register', function (req, res, next) {
 
 //Destroy the tokens assigned to the user
 router.post('/logout', passport.authenticate('bearer', {session: false}), function (req, res, next) {
-    Token.findOne({userId: req.user.userId}, function (err, token) {
-        if (err) {
-            res.status(500).send(err);
-        }
-        else if (!token) {
-            res.status(200).send();
-        }
-        else {
-            token.remove();
-            TokenRef.findOne({userId: req.user.userId}, function (err, tokenRef) {
-                if (err || !tokenRef) {
-                    res.status(500).send(err === null ? err : "error occurred");
-                } else {
-                    tokenRef.remove();
-                    res.status(200).send("logged out");
-                }
-            });
-        }
-    });
-
-
+    Token.findOne({userId: req.user.userId})
+        .exec()
+        .then(function (token) {
+            if (!token) {
+                res.status(200).send();
+            }
+            else {
+                token.remove();
+                TokenRef.findOne({userId: req.user.userId}, function (err, tokenRef) {
+                    if (err || !tokenRef) {
+                        res.status(500).send(err === null ? err : "error occurred");
+                    } else {
+                        tokenRef.remove();
+                        res.status(200).send("logged out");
+                    }
+                });
+            }
+        }).catch(next)
 });
+
 //Connect/disconnect with a user
 router.post('/connect/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
-    Connect.findOne({follower: req.user.userId, followee: req.params.id}, function (err, connection) {
-        if (err) {
-            res.status(500).send(err);
-        } else if (connection) {
-            connection.remove();
-            res.status(200).send("Connection removed!");
-        } else {
-            User.findById(req.params.id)
-                .exec(function (err, user) {
-                    if (err || !user) {
-                        res.status(500).send(err);
-                    } else {
-                        new Connect({
-                            follower: req.user,
-                            followee: user
-                        }).save(function (err) {
-                            if (err) {
-                                res.status(500).send(err);
-                            } else {
-                                res.status(200).send("Done!");
-                            }
-                        })
-                    }
-                })
-        }
-    });
+
+    if (req.params.id("username") !== "" || req.params.id < 12) {
+        next();
+        return;
+    }
+
+    Connect.findOne({follower: req.user.userId, followee: req.params.id})
+        .exec()
+        .then(function (connection) {
+            if (connection) {
+                connection.remove();
+                res.status(200).send("Connection removed!");
+            } else {
+                User.findById(req.params.id)
+                    .exec(function (err, user) {
+                        if (err || !user) {
+                            res.status(500).send(err);
+                        } else {
+                            new Connect({
+                                follower: req.user,
+                                followee: user
+                            }).save(function (err) {
+                                if (err) {
+                                    res.status(500).send(err);
+                                } else {
+                                    res.status(200).send("Done!");
+                                }
+                            })
+                        }
+                    })
+            }
+        }).catch(next);
 });
 
 //get the total amount of followers
 router.get('/connect', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+
     Connect.aggregate([
         {
             $match: {
@@ -115,20 +126,6 @@ router.get('/connect', passport.authenticate('bearer', {session: false}), functi
     });
 });
 
-
-//Connect/disconnect with a user
-router.get('/connect/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
-    Connect.findOne({follower: req.user.userId, followee: req.params.id}, function (err, connection) {
-        if (err) {
-            res.status(500).send(err);
-        } else if (!connection) {
-            res.status(200).send("Not followed");
-        } else {
-            res.status(200).send("followed");
-        }
-    });
-});
-
 function sendUserData(res, user) {
     if (user.info)
         res.json({
@@ -152,20 +149,27 @@ function sendUserData(res, user) {
 
 /* GET user info*/
 router.get('/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+    if (req.params.id === "") {
+        res.status(500).send(err);
+        return;
+    }
     if (req.params.id === "notif") {
         next();
         return;
     }
     User.findById(req.params.id)
-        .exec(function (err, result) {
-            if (err) {
-                res.status(500).send(err);
+        .exec()
+        .then(function (result) {
+            if (!result) {
+                throw "Nothing found"
             } else {
                 sendUserData(res, result)
             }
         })
+        .catch(next);
 
 });
+
 router.get('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     req.user.populate('info', function (err, result) {
@@ -182,6 +186,13 @@ router.get('/', passport.authenticate('bearer', {session: false}), function (req
 /* Update user info*/
 router.post('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
+    if (!req.body.hasOwnProperty("username") ||
+        !req.body.hasOwnProperty("firstname") ||
+        !req.body.hasOwnProperty("lastname")) {
+
+        next();
+        return;
+    }
     req.user.populate('info', function (err, result) {
         if (err) {
             res.status(500).send(err);
@@ -208,8 +219,9 @@ router.post('/', passport.authenticate('bearer', {session: false}), function (re
             });
         }
     });
-
 });
+
+
 /* GET notifications*/
 router.get('/notif', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     req.user.populate('notifications', function (err, result) {
