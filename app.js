@@ -30,7 +30,7 @@ app.use('/api/des', des);
 app.use('/api/search', search);
 app.use('/api/oauth', oauth2);
 app.use('/', routes);
-schedule.scheduleJob(' */1 * * * *', scheduled.gaunlets);
+schedule.scheduleJob(' */5 * * * *', scheduled.gaunlets);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

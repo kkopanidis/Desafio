@@ -1,16 +1,16 @@
-var User = require('../models/user');
-var userInfo = require('../models/userInfo');
-var mongoose = require('mongoose'),
-    gaunletStatus = require('../models/gauntletStatus'),
-    gaunlet = require('../models/gauntlet'),
+const User = require('../models/user'),
+    userInfo = require('../models/userInfo'),
+    mongoose = require('mongoose'),
+    gauntletStatus = require('../models/gauntletStatus'),
+    gauntlet = require('../models/gauntlet'),
     Denchange = require('../models/denchange'),
     moment = require('moment'),
-    notification = require('./notifications');
-Promise = require('bluebird');
+    notification = require('./notifications'),
+    Promise = require('bluebird');
 
 function complete(gauntletID) {
-    var user_1;
-    gaunlet.findById(gauntletID)
+    let user_1;
+    gauntlet.findById(gauntletID)
         .populate('status')
         .exec()
         .then(function (res) {
@@ -55,8 +55,8 @@ function complete(gauntletID) {
 }
 
 function fail(gauntletID) {
-    var user_1;
-    gaunlet.findById(gauntletID)
+    let user_1;
+    gauntlet.findById(gauntletID)
         .populate('status')
         .exec()
         .then(function (res) {

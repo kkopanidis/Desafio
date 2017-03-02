@@ -72,7 +72,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
             status();
             info($routeParams.id);
 
-            $http.get("/api/des/gaunlet/" + $routeParams.id, {
+            $http.get("/api/des/gauntlet/" + $routeParams.id, {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
@@ -85,7 +85,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
             $scope.own = true;
             info();
 
-            $http.get("/api/des/gaunlet/self", {
+            $http.get("/api/des/gauntlet/self", {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
@@ -97,7 +97,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
         }
 
         $scope.answer = function (id, answer) {
-            $http.post("/api/des/gaunlet/" + id, {action: answer}, {
+            $http.post("/api/des/gauntlet/" + id, {action: answer}, {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.get('auth_0')
                 }
@@ -202,7 +202,7 @@ profCtrl.controller('profCtrl', ['$scope', '$location', '$http', '$cookies', '$r
 
                     reader.onloadend = function (e) {
                         //Send the checked users and the challenge id to the server
-                        $http.post("/api/des/gaunlet/" + gauntletID, {
+                        $http.post("/api/des/gauntlet/" + gauntletID, {
                             action: answer,
                             proof: (e.target.result.split(','))[1]
                         }, {

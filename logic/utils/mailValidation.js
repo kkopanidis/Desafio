@@ -1,6 +1,6 @@
 "use strict";
 
-var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$/,
+const tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$/,
     dns = require('dns');
 
 function validate(email, callback) {
@@ -9,20 +9,20 @@ function validate(email, callback) {
         return;
     }
 
-    var valid = tester.test(email);
+    let valid = tester.test(email);
     if (!valid) {
         callback("error", null);
         return;
     }
 
     // Further checking of some things regex can't handle
-    var parts = email.split("@");
+    let parts = email.split("@");
     if (parts[0].length > 64) {
         callback("error", null);
         return;
     }
 
-    var domainParts = parts[1].split(".");
+    let domainParts = parts[1].split(".");
     if (domainParts.some(function (part) {
             return part.length > 63;
         })) {
@@ -30,7 +30,6 @@ function validate(email, callback) {
         return;
     }
 
-    //callback(null, {success: true});
     startDNSQueries(email, callback);
 
 }

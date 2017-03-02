@@ -181,7 +181,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
                         send.push($scope.data[i]);
                 }
                 //Send the checked users and the challenge id to the server
-                $http.post("/api/des/gaunlet", [send, activeSendId], {
+                $http.post("/api/des/gauntlet", [send, activeSendId], {
                     headers: {
                         'Authorization': 'Bearer ' + $cookies.get('auth_0')
                     }
@@ -207,7 +207,7 @@ module.controller('mainCtrl', ['$scope', '$location', '$http', '$cookies', '$mdD
 
             $scope.answer = function (answer) {
                 //Send the checked users and the challenge id to the server
-                $http.post("/api/des/gaunlet/" + $scope.reviewed._id, {
+                $http.post("/api/des/gauntlet/" + $scope.reviewed._id, {
                     action: answer
                 }, {
                     headers: {

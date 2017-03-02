@@ -65,7 +65,7 @@ router.get('/comments/:id', passport.authenticate('bearer', {session: false}), f
 
 
 //Get gaunlets in general
-router.get('/gaunlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+router.get('/gauntlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Gaunlet.find({})
         .populate('challenge', 'title')
@@ -85,7 +85,7 @@ router.get('/gaunlet', passport.authenticate('bearer', {session: false}), functi
 });
 
 //Get gaunlets thrown at me
-router.get('/gaunlet/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+router.get('/gauntlet/self', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Gaunlet.find({})
         .where('challengee').equals(req.user)
@@ -105,7 +105,7 @@ router.get('/gaunlet/self', passport.authenticate('bearer', {session: false}), f
 
 });
 //Get gaunlets pending review
-router.get('/gaunlet/review', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+router.get('/gauntlet/review', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     Gaunlet.find({})
         .where('challenger').equals(req.user)
@@ -190,7 +190,7 @@ router.post('/', passport.authenticate('bearer', {session: false}), function (re
 });
 
 //Create a new gauntlet
-router.post('/gaunlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+router.post('/gauntlet', passport.authenticate('bearer', {session: false}), function (req, res, next) {
     if (!(req.body instanceof Array) || !(req.body[0] instanceof Array)) {
         next();
         return;
@@ -225,7 +225,7 @@ router.post('/gaunlet', passport.authenticate('bearer', {session: false}), funct
 
 
 //Complete gauntlet
-router.post('/gaunlet/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
+router.post('/gauntlet/:id', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
     if (req.params.id === "" ||
         req.params.id < 11 || !req.body.hasOwnProperty("action")) {

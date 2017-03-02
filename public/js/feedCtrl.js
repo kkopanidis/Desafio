@@ -16,7 +16,7 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
         }, function error(error) {
 
         });
-        $http.get("/api/des/gaunlet/review", {
+        $http.get("/api/des/gauntlet/review", {
             headers: {
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
             }
@@ -79,7 +79,7 @@ feedCtrl.controller('feedCtrl', ['$scope', '$location', '$http', '$cookies',
 
         });
 
-        $http.get("/api/des/gaunlet", {
+        $http.get("/api/des/gauntlet", {
             headers: {
                 'Authorization': 'Bearer ' + $cookies.get('auth_0')
             }

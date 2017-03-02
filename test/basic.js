@@ -180,9 +180,9 @@ describe('challenge flow', function () {
     });
 
     // TODO
-    it('should fail to create a new gauntlent on /gaunlet POST', function (done) {
+    it('should fail to create a new gauntlet on /gauntlet POST', function (done) {
         chai.request(server)
-            .post('/api/des/gaunlet')
+            .post('/api/des/gauntlet')
             .set('Authorization', 'Bearer ' + cookies)
             .send({})
             .end(function (err, res) {
