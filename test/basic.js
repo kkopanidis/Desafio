@@ -228,17 +228,17 @@ describe('challenge flow', function () {
     it('should create a new gauntlent on /gaunlet POST', function (done) {
         var challengees = [];
         user.findOne({
-            "username": "utest123",
-            "password": "test1234",
-            "conf_password": "test1234",
-            "email": "utest123@test.com",
-            "dob": "1992-10-26"
-        }).exec().then(function (err, res) {
-            challengees.push(res._id);
-        });
-
-        challenge.findOne({'name': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
-            .exec()
+            "username": "utest123"
+        }).exec()
+            .then(function (res) {
+                if (res) {
+                    challengees.push(res._id);
+                    return challenge.findOne({'title': 'testaki'})
+                        .exec()
+                } else {
+                    throw "No users found";
+                }
+            })
             .then(function (result) {
                 if (result) {
                     chai.request(server)
@@ -249,8 +249,13 @@ describe('challenge flow', function () {
                             res.should.have.status(200);
                             done();
                         });
+                } else {
+                    throw "Nothing found"
                 }
-            });
+            })
+            .catch(function (err) {
+                console.log(err);
+                done();
+            })
     });
-
 });
