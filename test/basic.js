@@ -242,7 +242,7 @@ describe('challenge flow', function () {
             .then(function (result) {
                 if (result) {
                     chai.request(server)
-                        .post('/api/des/gaunlet')
+                        .post('/api/des/gauntlet')
                         .set('Authorization', 'Bearer ' + cookies)
                         .send([challengees, result._id])
                         .end(function (err, res) {
