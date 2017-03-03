@@ -13,12 +13,18 @@
         accept_hostkey: yes
 
     - name: copy nginx config
-      template: src=files/nginx.j2 dest=/etc/nginx/sites-enabled/{{ project_name }}.conf
+      template: src=files/nginx.j2 dest=/etc/nginx/sites-enabled/{{ project_name }}
       notify:
       - restart nginx
 
     - name: build the image
       command: docker build -t desafio:latest /srv/desafio
+
+    - name: stop desafio container if running
+      command: docker stop desafio
+
+    - name: remove desafio container
+      command: docker rm desafio
 
     - name: run desafio in a docker container
       command: docker run --name desafio -d -p 3000:3000 --link mongo:mongo --restart=always -d desafio:latest

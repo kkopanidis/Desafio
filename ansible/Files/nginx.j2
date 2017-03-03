@@ -1,12 +1,12 @@
 upstream desafio {
 
-    server 127.0.0.2:3000;
+    server localhost:3000;
 }
 
 server {
-    listen 80 http2;
-    listen [::]:80 http2;
-    server_name www.desafio.com
+    listen 80;
+    listen [::]:80;
+    server_name desafio;
 
     location / {
         proxy_pass http://desafio;

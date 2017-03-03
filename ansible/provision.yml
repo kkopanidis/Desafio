@@ -94,6 +94,12 @@
 #        volumes:
 #        - /data
 
+    - name: stop mongo container
+      shell: docker stop mongo
+
+    - name: remove mongo container
+      shell: docker rm mongo
+
     - name: mongo container
       shell: docker run --name mongo -v /data:/data/db -d mongo:latest
 
