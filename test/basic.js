@@ -258,73 +258,84 @@ describe('challenge flow', function () {
                 done();
             })
     });
-    
+
     it('should like a challenge on /des/like/:id POST', function (done) {
         challenge.findOne({'title': 'testaki'})
-                 .exec()
-                 .then(function(result) {
-                    if(result) {
-                        chai.request(server)
-                            .post('/api/des/like/'+result._id)
-                            .set('Authorization', 'Bearer ' + cookies)
-                            .send({})
-                            .end(function (err, res) {
-                                res.should.have.status(200);
-                                done();
-                            });
-                    }
-                 });
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    chai.request(server)
+                        .post('/api/des/like/' + result._id)
+                        .set('Authorization', 'Bearer ' + cookies)
+                        .send({})
+                        .end(function (err, res) {
+                            res.should.have.status(200);
+                            done();
+                        });
+                }
+            });
     });
-    
+
     it('should fail to like a challenge on /des/like/:id due to no auth', function (done) {
         challenge.findOne({'title': 'testaki'})
-                 .exec()
-                 .then(function(result) {
-                    if(result) {
-                        chai.request(server)
-                            .post('/api/des/like/'+result._id)
-                            .send({})
-                            .end(function (err, res) {
-                                res.should.have.status(401); // what error?
-                                done();
-                            });
-                    }
-                 });
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    chai.request(server)
+                        .post('/api/des/like/' + result._id)
+                        .send({})
+                        .end(function (err, res) {
+                            res.should.have.status(401); // what error?
+                            done();
+                        });
+                }
+            });
     });
-    
+
     it('should comment a challenge on /des/comments/:id POST', function (done) {
         var com = "nice test ;)";
         challenge.findOne({'title': 'testaki'})
-                 .exec()
-                 .then(function(result) {
-                    if(result) {
-                        chai.request(server)
-                            .post('/api/des/comments/'+result._id)
-                            .set('Authorization', 'Bearer ' + cookies)
-                            .send({'comment': com})
-                            .end(function (err, res) {
-                                res.should.have.status(200);
-                                done();
-                            });
-                    }
-                 });
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    chai.request(server)
+                        .post('/api/des/comments/' + result._id)
+                        .set('Authorization', 'Bearer ' + cookies)
+                        .send({'comment': com})
+                        .end(function (err, res) {
+                            res.should.have.status(200);
+                            done();
+                        });
+                }
+            });
     });
-    
+
     it('should get comments of a challenge on /des/comments/:id GET', function (done) {
         challenge.findOne({'title': 'testaki'})
-                 .exec()
-                 .then(function(result) {
-                    if(result) {
-                        chai.request(server)
-                            .get('/api/des/comments/'+result._id)
-                            .set('Authorization', 'Bearer ' + cookies)
-                            .end(function (err, res) {
-                                res.should.have.status(200);
-                                res.should.be.json;
-                                res.body.should.be.a('array');  // array?
-                                done();
-                            });
-                    }
-                 });
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    chai.request(server)
+                        .get('/api/des/comments/' + result._id)
+                        .set('Authorization', 'Bearer ' + cookies)
+                        .end(function (err, res) {
+                            res.should.have.status(200);
+                            res.should.be.json;
+                            res.body.should.be.a('array');  // array?
+                            done();
+                        });
+                }
+            });
+    });
+
+    after(function (done) {
+        challenge.findOne({'title': 'testaki'})
+            .exec()
+            .then(function (result) {
+                if (result) {
+                    result.remove();
+                    done();
+                }
+            });
     });
 });
