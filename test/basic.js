@@ -1,5 +1,6 @@
 "use strict";
-//process.env.NODE_ENV = 'test';
+process.env.MONGO_PORT_27017_TCP_ADDR = '83.212.101.8';
+process.env.MONGO_PORT_27017_TCP_PORT = '27017';
 var server = require('../app');
 var chai = require('chai');
 var chaiHttp = require('chai-http');

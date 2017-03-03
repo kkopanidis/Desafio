@@ -101,7 +101,7 @@
       shell: docker rm mongo
 
     - name: mongo container
-      shell: docker run --name mongo -v /data:/data/db -d mongo:latest
+      shell: docker run --name mongo -v /data:/data/db --restart=always -d mongo:latest
 
     - name: remove default nginx site
       file: path=/etc/nginx/sites-enabled/default state=absent

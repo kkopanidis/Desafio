@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 
 mongoose.Promise = require('bluebird');
 //todo add database url here
-mongoose.connect('mongodb://83.212.101.8/desafio');
+//mongoose.connect('mongodb://83.212.101.8/desafio');
 
-// mongoose.connect('mongodb://' + process.env.MONGO_PORT_27017_TCP_ADDR + ':'
-//     + process.env.MONGO_PORT_27017_TCP_PORT + '/desafio');
+mongoose.connect('mongodb://' + process.env.MONGO_PORT_27017_TCP_ADDR + ':'
+    + process.env.MONGO_PORT_27017_TCP_PORT + '/desafio');
 
 
 
