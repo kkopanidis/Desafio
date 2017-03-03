@@ -167,7 +167,6 @@ describe('Login and sessions', function () {
 describe('challenge flow', function () {
 
     before(function (done) {
-
         user.findOne({username: 'utest123'})
             .exec()
             .then(function (result) {
@@ -207,7 +206,7 @@ describe('challenge flow', function () {
         chai.request(server)
             .post('/api/des')
             .set('Authorization', 'Bearer ' + cookies)
-            .send({'name': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
+            .send({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
             .end(function (err, res) {
                 res.should.have.status(200);
                 done();
@@ -257,5 +256,76 @@ describe('challenge flow', function () {
                 console.log(err);
                 done();
             })
+    });
+    
+    it('should like a challenge on /des/like/:id POST', function (done) {
+        challenge.findOne({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
+                 .exec()
+                 .then(function(result) {
+                    if(result) {
+                        chai.request(server)
+                            .post('/api/des/likes/'+result._id)
+                            .set('Authorization', 'Bearer ' + cookies)
+                            .send({})
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                done();
+                            });
+                    }
+                 });
+    });
+    
+    it('should fail to like a challenge on /des/like/:id due to no auth', function (done) {
+        challenge.findOne({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
+                 .exec()
+                 .then(function(result) {
+                    if(result) {
+                        chai.request(server)
+                            .post('/api/des/likes/'+result._id)
+                            .send({})
+                            .end(function (err, res) {
+                                res.should.have.status(500); // what error?
+                                done();
+                            });
+                    }
+                 });
+    });
+    
+    it('should comment a challenge on /des/comments/:id POST', function (done) {
+        var com = "nice test ;)";
+        challenge.findOne({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
+                 .exec()
+                 .then(function(result) {
+                    if(result) {
+                        chai.request(server)
+                            .post('/api/des/comments/'+result._id)
+                            .set('Authorization', 'Bearer ' + cookies)
+                            .send({'comment': com})
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                res.should.be.json;
+                                res.should.have.property('comment');
+                                res.comment.should.equal(com);
+                                done();
+                            });
+                    }
+                 });
+    });
+    
+    it('should get comments of a challenge on /des/comments/:id GET', function (done) {
+        challenge.findOne({'title': 'testaki', 'desc': 'perigrafh lol', 'type': 'food'})
+                 .exec()
+                 .then(function(result) {
+                    if(result) {
+                        chai.request(server)
+                            .get('/api/des/comments/'+result._id)
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                res.should.be.json;
+                                res.should.be.a('array');  // array?
+                                done();
+                            });
+                    }
+                 });
     });
 });
