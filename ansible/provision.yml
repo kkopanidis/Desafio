@@ -69,12 +69,7 @@
           state: started
           enabled: True
 #
-#    - name: reboot server
-#      shell: sleep 2 && shutdown -r now
-#      become: true
-#      async: 1
-#      poll: 0
-#      ignore_errors: true
+
 #
 #    - name: Wait for restart
 #      local_action:
@@ -105,6 +100,13 @@
 
     - name: remove default nginx site
       file: path=/etc/nginx/sites-enabled/default state=absent
+
+    - name: reboot server
+      shell: sleep 2 && shutdown -r now
+      become: true
+      async: 1
+      poll: 0
+      ignore_errors: true
 
 # - include: deploy.yml
 
