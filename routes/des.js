@@ -169,13 +169,13 @@ router.post('/comments/:id', passport.authenticate('bearer', {session: false}), 
 //Create a new challenge
 router.post('/', passport.authenticate('bearer', {session: false}), function (req, res, next) {
 
-    if (!req.body.hasOwnProperty("name") || !req.body.hasOwnProperty("desc") || !req.body.hasOwnProperty("type")) {
+    if (!req.body.hasOwnProperty("title") || !req.body.hasOwnProperty("desc") || !req.body.hasOwnProperty("type")) {
         next();
         return;
     }
 
     new Challenge({
-        title: req.body.name,
+        title: req.body.title,
         desc: req.body.desc,
         type: req.body.type,
         issuer: req.user
