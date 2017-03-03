@@ -264,7 +264,7 @@ describe('challenge flow', function () {
                  .then(function(result) {
                     if(result) {
                         chai.request(server)
-                            .post('/api/des/likes/'+result._id)
+                            .post('/api/des/like/' + result._id)
                             .set('Authorization', 'Bearer ' + cookies)
                             .send({})
                             .end(function (err, res) {
@@ -281,7 +281,7 @@ describe('challenge flow', function () {
                  .then(function(result) {
                     if(result) {
                         chai.request(server)
-                            .post('/api/des/likes/'+result._id)
+                            .post('/api/des/like/' + result._id)
                             .send({})
                             .end(function (err, res) {
                                 res.should.have.status(500); // what error?
